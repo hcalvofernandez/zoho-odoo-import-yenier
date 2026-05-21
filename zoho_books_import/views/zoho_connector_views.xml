@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_zoho_connector_form" model="ir.ui.view">
+            <field name="name">zoho.connector.form</field>
+            <field name="model">zoho.connector</field>
+            <field name="arch" type="xml">
+                <form string="Zoho Connector">
+                    <header>
+                        <button name="action_generate_auth_url" string="Generate Auth URL" type="object"
+                                class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_activate" string="Activate" type="object"
+                                class="btn-success" invisible="state != 'draft'"/>
+                        <button name="action_test_connection" string="Test Connection" type="object"
+                                class="btn-info" invisible="state != 'active'"/>
+                        <button name="action_refresh_token" string="Refresh Token" type="object"
+                                invisible="state != 'active'"/>
+                        <button name="action_reset" string="Reset" type="object"
+                                class="btn-danger" invisible="state == 'draft'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,expired"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Connector Name"/></h1>
+                        </div>
+                        
+                        <!-- SECCIÓN 1: OAuth2 Configuration (solo en Draft) -->
+                        <group string="OAuth2 Configuration" invisible="state != 'draft'">
+                            <group col="2">
+                                <field name="client_id"/>
+                                <field name="client_secret" password="True"/>
+                            </group>
+                            <group col="2">
+                                <field name="redirect_url"/>
+                                <field name="country_endpoint"/>
+                                <field name="auth_code"/>
+                            </group>
+                        </group>
+                        
+                        <!-- SECCIÓN 2: Token Information (solo en Active) -->
+                        <group string="Token Information" invisible="state == 'draft'">
+                            <group col="2">
+                                <field name="access_token" password="True" readonly="1"/>
+                                <field name="refresh_token" password="True" readonly="1"/>
+                            </group>
+                            <group col="2">
+                                <field name="expires_in" readonly="1"/>
+                                <field name="is_token_valid" readonly="1"/>
+                                <field name="organization_id" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <!-- SECCIÓN 3: Import Settings -->
+                        <group string="Import Settings">
+                            <group col="2" string="Products &amp; Partners">
+                                <field name="import_products"/>
+                                <field name="import_stock" invisible="not import_products"/>
+                                <field name="import_customers"/>
+                                <field name="import_vendors"/>
+                            </group>
+                            <group col="2" string="Transactions">
+                                <field name="import_sale_orders"/>
+                                <field name="import_invoices"/>
+                                <field name="import_bills"/>
+                                <field name="import_customer_payments"/>
+                                <field name="import_vendor_payments"/>
+                                <field name="import_customer_credits"/>
+                                <field name="import_vendor_credits"/>
+                            </group>
+                        </group>
+                        
+                        <!-- SECCIÓN 4: Last Sync -->
+                        <group string="Last Sync" invisible="state == 'draft'">
+                            <group col="2">
+                                <field name="last_product_sync" readonly="1"/>
+                                <field name="last_partner_sync" readonly="1"/>
+                            </group>
+                            <group col="2">
+                                <field name="last_sale_sync" readonly="1"/>
+                                <field name="last_invoice_sync" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_zoho_connector_list" model="ir.ui.view">
+            <field name="name">zoho.connector.list</field>
+            <field name="model">zoho.connector</field>
+            <field name="arch" type="xml">
+                <list string="Zoho Connectors">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="country_endpoint"/>
+                    <field name="is_token_valid"/>
+                    <field name="last_product_sync"/>
+                    <field name="last_partner_sync"/>
+                </list>
+            </field>
+        </record>
+        
+        <record id="action_zoho_connector" model="ir.actions.act_window">
+            <field name="name">Zoho Connectors</field>
+            <field name="res_model">zoho.connector</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

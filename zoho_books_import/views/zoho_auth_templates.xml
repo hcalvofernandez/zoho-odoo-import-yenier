@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template for successful OAuth callback -->
+        <template id="zoho_auth_success" name="Zoho Auth Success">
+            <t t-call="web.layout">
+                <div class="container mt-5">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h3 class="mb-0">Authentication Successful</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-success">
+                                <strong>Success!</strong> Your Zoho connector has been authenticated successfully.
+                            </div>
+                            <p><strong>Connector:</strong> <t t-esc="connector_name"/></p>
+                            <p>The authorization code has been received. You can now activate the connector.</p>
+                            <a href="/web#action=zoho_books_import.action_zoho_connector" class="btn btn-primary">
+                                Go to Connectors
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Template for error in OAuth callback -->
+        <template id="zoho_auth_error" name="Zoho Auth Error">
+            <t t-call="web.layout">
+                <div class="container mt-5">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h3 class="mb-0">Authentication Error</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-danger">
+                                <strong>Error:</strong> <t t-esc="error"/>
+                            </div>
+                            <p><strong>Description:</strong> <t t-esc="error_description"/></p>
+                            <p>Please try again or contact support if the problem persists.</p>
+                            <a href="/web#action=zoho_books_import.action_zoho_connector" class="btn btn-primary">
+                                Go to Connectors
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

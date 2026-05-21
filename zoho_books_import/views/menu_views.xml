@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_zoho_root" name="Zoho Books" 
+                  sequence="50"/>
+        
+        <menuitem id="menu_zoho_connectors" name="Connectors" 
+                  parent="menu_zoho_root" sequence="10"/>
+        <menuitem id="menu_zoho_connectors_list" name="Connector List" 
+                  parent="menu_zoho_connectors" action="action_zoho_connector" sequence="10"/>
+        
+        <menuitem id="menu_zoho_import" name="Import Data" 
+                  parent="menu_zoho_root" sequence="20"/>
+        <menuitem id="menu_zoho_import_wizard" name="Import from Zoho" 
+                  parent="menu_zoho_import" action="action_zoho_import_wizard" sequence="10"/>
+        
+        <!-- Logs temporarily disabled due to view overlap issue -->
+        <!--
+        <menuitem id="menu_zoho_logs" name="Logs" 
+                  parent="menu_zoho_root" sequence="30"/>
+        <menuitem id="menu_zoho_import_logs" name="Import Logs" 
+                  parent="menu_zoho_logs" action="action_zoho_import_log" sequence="10"/>
+        -->
+    </data>
+</odoo>

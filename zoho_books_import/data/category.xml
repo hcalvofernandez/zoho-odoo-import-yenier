@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="module_category_doorandoor" model="ir.module.category">
+            <field name="name">Doorandoor</field>
+            <field name="description">Módulos personalizados de Doorandoor</field>
+            <field name="sequence">95</field>
+        </record>
+        
+        <record id="module_category_doorandoor_accounting" model="ir.module.category">
+            <field name="name">Accounting</field>
+            <field name="description">Módulos de contabilidad de Doorandoor</field>
+            <field name="parent_id" ref="module_category_doorandoor"/>
+            <field name="sequence">10</field>
+        </record>
+    </data>
+</odoo>
