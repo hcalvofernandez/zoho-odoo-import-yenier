@@ -16,6 +16,9 @@ Estado actual del desarrollo:
 - Importacion de partners funcional
 - Lectura de productos desde Zoho funcional
 - Flujo de productos ajustado para distintas variantes del campo de tipo en `product.template`
+- Mapeo corregido de tipos de producto Zoho a Odoo (goods, service, consumable)
+- Campo `zoho_product_type` agregado para guardar el tipo original de Zoho
+- Manejo mejorado de errores de API de Zoho con extraccion detallada de mensajes
 - Logs tecnicos y funcionales disponibles en Odoo y en `config/odoo-server.log`
 
 ## Alcance actual
@@ -37,7 +40,9 @@ Principales componentes del modulo:
 - `models/zoho_connector.py`
   Gestiona autenticacion, tokens, URLs de API y pruebas de conexion.
 - `models/zoho_product_import.py`
-  Gestiona lectura y creacion/actualizacion de productos.
+  Gestiona lectura y creacion/actualizacion de productos con mapeo inteligente de tipos.
+- `models/product_template.py`
+  Extiende `product.template` con campo `zoho_product_type` para guardar el tipo original de Zoho.
 - `models/zoho_partner_import.py`
   Gestiona lectura y creacion/actualizacion de clientes y proveedores.
 - `wizard/zoho_import_wizard.py`
@@ -218,6 +223,36 @@ Correccion aplicada:
 
 - Se agrego un resumen final basado en los logs funcionales de importacion
 
+### Etapa 7: correccion del mapeo de tipos de producto Zoho
+
+Problemas detectados:
+
+- Los servicios en Zoho pueden tener cantidad (ej: 10 horas de consultoria)
+- En Odoo, el tipo `service` no permite gestion de stock
+- El mapeo original no consideraba esta diferencia
+
+Correccion aplicada:
+
+- Se creo metodo `_get_product_type_vals` con mapeo corregido:
+  - `goods` (Zoho) → `product` (Odoo) - stockeable
+  - `consumable` (Zoho) → `consu` (Odoo) - consumible
+  - `service` (Zoho) → `product` (Odoo) - forzado a stockeable para permitir cantidad
+- Se agrego campo `zoho_product_type` en `product.template` para guardar el tipo original de Zoho
+- El sistema ahora detecta automaticamente si usar `type` o `detailed_type` segun la version de Odoo
+
+### Etapa 8: mejora del manejo de errores de API de Zoho
+
+Problema detectado:
+
+- Los errores de Zoho se mostraban como mensajes genericos `400 Client Error`
+- No se podia identificar facilmente la causa raiz del error
+
+Correccion aplicada:
+
+- Se creo metodo `_extract_zoho_error` para extraer mensajes detallados de la respuesta JSON de Zoho
+- El log ahora muestra el codigo de error y el mensaje descriptivo de Zoho
+- Mejora significativa en el diagnostico de problemas de conexion y autenticacion
+
 ## Estado actual conocido
 
 Confirmado en pruebas recientes:
@@ -301,6 +336,10 @@ Regla de trabajo aplicada durante este desarrollo:
   Compatibilidad dinamica entre `type` y `detailed_type` y mejora del wizard.
 - `18.0.1.2.3`
   Seleccion dinamica de valores validos para el tipo de producto segun la instancia.
+- `18.0.1.2.4`
+  Correccion del mapeo de tipos de producto Zoho (goods, service, consumable).
+- `18.0.1.2.5`
+  Agregado campo `zoho_product_type` y mejora del manejo de errores de API de Zoho.
 
 ## Siguiente fase sugerida
 
