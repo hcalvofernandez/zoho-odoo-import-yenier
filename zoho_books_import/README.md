@@ -1,352 +1,304 @@
 # Zoho Books Import (Unidirectional)
 
-## Objetivo
+Módulo Odoo 18 Community Edition para importación unidireccional de datos desde **Zoho Books** hacia **Odoo**.
 
-Este modulo importa informacion desde Zoho Books hacia Odoo.
+> **Flujo:** Zoho Books → Odoo  
+> **No exporta** información desde Odoo hacia Zoho.
 
-El flujo es unidireccional:
+---
 
-- Zoho Books -> Odoo
-- No exporta informacion desde Odoo hacia Zoho
+## Autor
 
-Estado actual del desarrollo:
+**Hanoi Calvo Fernández** ([@hanoicuba](https://github.com/hanoicuba))  
+Desarrollador del proyecto.
 
-- Autenticacion OAuth2 funcional
-- Deteccion automatica de `organization_id`
-- Importacion de partners funcional
-- Lectura de productos desde Zoho funcional
-- Flujo de productos ajustado para distintas variantes del campo de tipo en `product.template`
-- Mapeo corregido de tipos de producto Zoho a Odoo (goods, service, consumable)
-- Campo `zoho_product_type` agregado para guardar el tipo original de Zoho
-- Manejo mejorado de errores de API de Zoho con extraccion detallada de mensajes
-- Logs tecnicos y funcionales disponibles en Odoo y en `config/odoo-server.log`
+---
 
-## Alcance actual
+## Estado del Proyecto
 
-El modulo incluye soporte base para:
+| Componente | Estado |
+|-----------|--------|
+| Autenticación OAuth2 | ✅ Funcional |
+| Detección automática de `organization_id` | ✅ Funcional |
+| Importación de partners (clientes/proveedores) | ✅ Funcional |
+| Importación de productos | ✅ Funcional |
+| Importación de stock por producto | ✅ Funcional |
+| Logs técnicos y funcionales | ✅ Disponibles |
+| Tareas cron para sincronización | ✅ Configurables |
 
-- Conectores Zoho Books
-- Importacion manual por wizard
-- Importacion de productos
-- Importacion de stock por producto
-- Importacion de clientes y proveedores
-- Logs de importacion
-- Tareas cron para sincronizacion
+---
 
-## Estructura funcional
+## Requisitos
 
-Principales componentes del modulo:
+- Odoo 18 Community Edition
+- Módulos base: `base`, `mail`, `product`, `sale`, `account`, `stock`, `uom`
+- Conexión a internet para API de Zoho Books
+- Credenciales OAuth2 de Zoho (Client ID, Client Secret)
 
-- `models/zoho_connector.py`
-  Gestiona autenticacion, tokens, URLs de API y pruebas de conexion.
-- `models/zoho_product_import.py`
-  Gestiona lectura y creacion/actualizacion de productos con mapeo inteligente de tipos.
-- `models/product_template.py`
-  Extiende `product.template` con campo `zoho_product_type` para guardar el tipo original de Zoho.
-- `models/zoho_partner_import.py`
-  Gestiona lectura y creacion/actualizacion de clientes y proveedores.
-- `wizard/zoho_import_wizard.py`
-  Orquesta la ejecucion manual de importaciones desde interfaz.
-- `models/zoho_import_log.py`
-  Guarda el resultado funcional de cada importacion.
+---
 
-## Configuracion del conector
+## Instalación
 
-### Datos requeridos
+1. Clonar o copiar el directorio `zoho_books_import/` dentro de la carpeta `addons/` de tu instancia Odoo.
+2. Actualizar la lista de aplicaciones en Odoo.
+3. Instalar el módulo **"Zoho Books Import (Unidirectional)"**.
+4. Configurar el conector en **Zoho Books > Connectors**.
 
-Cada conector necesita:
+---
 
-- Nombre
-- `client_id`
-- `client_secret`
-- `redirect_url`
-- `country_endpoint`
-- `auth_code` durante el proceso inicial
-- `access_token` y `refresh_token` despues de activar
-- `organization_id`
+## Configuración del Conector
 
-### Flujo recomendado
+### Datos Requeridos
+
+| Campo | Descripción |
+|-------|-------------|
+| Nombre | Identificador del conector |
+| Client ID | Credencial OAuth2 de Zoho |
+| Client Secret | Credencial OAuth2 de Zoho |
+| Redirect URL | URL de callback (ej: `http://localhost:8069/zoho/callback`) |
+| Data Center | Datacenter de Zoho (com, eu, in, com.au, com.cn, jp) |
+| Auth Code | Código de autorización (proceso inicial) |
+| Access Token / Refresh Token | Generados tras activación |
+| Organization ID | Detectado automáticamente o ingresado manualmente |
+
+### Flujo de Activación
 
 1. Crear el conector en Odoo.
 2. Seleccionar el datacenter correcto.
-3. Generar la URL de autorizacion.
-4. Autorizar en Zoho.
-5. Recibir el `auth_code` en el callback.
-6. Activar el conector.
-7. Verificar que se detecte `organization_id`.
-8. Ejecutar `Test Connection`.
+3. Pulsar **Generate Auth URL** → autorizar en Zoho.
+4. Recibir el `auth_code` en el callback.
+5. Pulsar **Activate**.
+6. Verificar `organization_id` detectado.
+7. Ejecutar **Test Connection**.
+
+---
 
-## Operacion correcta de URLs
+## Operación Correcta de URLs
 
-Este punto es critico. En las pruebas del desarrollo aparecieron errores por usar dominios o rutas incorrectas.
+> **Crítico:** Usar siempre el dominio correcto de la API.
 
-### URLs correctas
+### URLs Correctas
 
-Para API de Zoho Books se debe usar:
+| Datacenter | Base API Zoho Books | Base OAuth |
+|-----------|---------------------|------------|
+| .com (US) | `https://www.zohoapis.com/books` | `https://accounts.zoho.com/oauth/v2/...` |
+| .eu (Europa) | `https://www.zohoapis.eu/books` | `https://accounts.zoho.eu/oauth/v2/...` |
+| .in (India) | `https://www.zohoapis.in/books` | `https://accounts.zoho.in/oauth/v2/...` |
+| .com.au (Australia) | `https://www.zohoapis.com.au/books` | `https://accounts.zoho.com.au/oauth/v2/...` |
+| .com.cn (China) | `https://www.zohoapis.com.cn/books` | `https://accounts.zoho.com.cn/oauth/v2/...` |
+| .jp (Japón) | `https://www.zohoapis.jp/books` | `https://accounts.zoho.jp/oauth/v2/...` |
 
-- `https://www.zohoapis.com/books/v3/...` para `.com`
-- `https://www.zohoapis.eu/books/v3/...` para `.eu`
-- `https://www.zohoapis.in/books/v3/...` para `.in`
-- `https://www.zohoapis.com.au/books/v3/...` para `.com.au`
-- `https://www.zohoapis.com.cn/books/v3/...` para `.com.cn`
-- `https://www.zohoapis.jp/books/v3/...` para `.jp`
+### URLs Incorrectas (provocan errores 400)
 
-Para autenticacion OAuth se debe usar:
+- ❌ `https://books.zoho.com/api/v3/...`
+- ❌ `https://www.zohoapis.com/books/api/v3/...`
 
-- `https://accounts.zoho.com/oauth/v2/...`
-- o el dominio `accounts.zoho.<dc>` segun el datacenter
+---
 
-### URLs incorrectas detectadas durante el desarrollo
+## Uso del Módulo
 
-Estas variantes provocaron errores en pruebas:
+### Importación Manual
 
-- `https://books.zoho.com/api/v3/...`
-- `https://www.zohoapis.com/books/api/v3/...`
+1. Ir a **Zoho Books > Import Data**.
+2. Seleccionar el conector activo.
+3. Elegir qué importar: productos y/o partners.
+4. Definir si se actualizan registros existentes.
+5. Ejecutar **Import Now**.
 
-Problemas observados:
+### Sincronización Automática (Cron)
 
-- Zoho respondio con error pidiendo usar `zohoapis`
-- Zoho devolvio `400` por ruta incorrecta al usar `/books/api/v3/...`
+Configurar en **Ajustes > Técnico > Acciones planificadas**:
+- `Zoho Auto Sync: Products`
+- `Zoho Auto Sync: Partners`
 
-### Regla operativa
+---
 
-Para cualquier instancia donde se use este modulo:
+## Importación de Partners (Clientes/Proveedores)
 
-- La base API de Books debe construirse como `https://www.zohoapis.<dc>/books`
-- Los endpoints deben agregarse como `/v3/<endpoint>`
-- No usar `/api/v3/`
-- No usar `books.zoho.<dc>` para llamadas API
+### Datos Importados
 
-## Uso del modulo
+| Dato Zoho | Campo Odoo | Notas |
+|-----------|-----------|-------|
+| `contact_name` | `name` | Nombre del contacto |
+| `email` | `email` | Correo principal |
+| `phone` | `phone` | Teléfono fijo |
+| `mobile` | `mobile` | Teléfono móvil |
+| `website` | `website` | Sitio web |
+| `tax_id` / `gst_no` / `cf_*` | `vat` | NIT/ID fiscal (busca en múltiples campos) |
+| `billing_address` | `street`, `city`, `zip`, `state_id`, `country_id` | Dirección de facturación |
+| `shipping_address` | Contacto hijo tipo `delivery` | Dirección de envío |
+| `contact_persons` | Contactos hijos | Personas asociadas con cargo, email, teléfono |
+| `company_name` | `commercial_company_name` | Nombre comercial |
+| `payment_terms` / `payment_terms_label` | `property_payment_term_id` | Términos de pago (cliente/proveedor) |
+| `credit_limit` | `credit_limit` | Límite de crédito |
+| `language_code` | `lang` | Idioma del partner |
+| `tags` | `category_id` | Etiquetas/categorías |
+| `notes` | `comment` | Notas |
+| `currency_code` | `property_product_pricelist` | Lista de precios según moneda |
 
-### Activacion del conector
+---
 
-1. Abrir **Zoho Books > Connectors**
-2. Crear o editar el conector
-3. Completar credenciales
-4. Pulsar **Generate Auth URL**
-5. Autorizar en Zoho
-6. Confirmar el callback
-7. Pulsar **Activate**
-8. Pulsar **Test Connection**
+## Importación de Productos
 
-### Importacion manual
+### Datos Importados
 
-1. Ir a **Zoho Books > Import Data**
-2. Seleccionar el conector activo
-3. Elegir si se importan productos y/o partners
-4. Definir si se actualizan registros existentes
-5. Ejecutar **Import Now**
+| Dato Zoho | Campo Odoo | Notas |
+|-----------|-----------|-------|
+| `name` | `name` | Nombre del producto |
+| `sku` / `item_code` | `default_code` | Código interno |
+| `item_id` | `zoho_item_id` | ID de referencia Zoho |
+| `product_type` | `type` / `detailed_type` | Mapeo corregido (ver nota abajo) |
+| `rate` | `list_price` | Precio de venta |
+| `purchase_rate` | `standard_price` | Precio de costo |
+| `description` | `description` | Descripción |
+| `weight` | `weight` | Peso |
+| `category_name` | `categ_id` | Categoría de producto |
+| `unit` | `uom_id` / `uom_po_id` | Unidad de medida |
+| `tax_id` | `taxes_id` | Impuesto de venta |
+| `stock_on_hand` | `stock.quant` | Cantidad en inventario (si se activa) |
 
-### Lectura de resultados
+### ⚠️ Nota Importante: Mapeo de Tipos de Producto
 
-Despues de cada importacion revisar:
+Zoho permite cantidades en **servicios** y **consumibles**, pero Odoo solo cuantifica productos **stockeables** (`product`) o **consumibles** (`consu`).
 
-- La notificacion final en pantalla
-- Los registros en **Zoho Books > Logs**
-- El archivo `config/odoo-server.log`
+**Solución aplicada (v18.0.1.2.5):**
 
-## Historial del proceso de desarrollo
+| Tipo Zoho | Tipo Odoo | Razón |
+|-----------|-----------|-------|
+| `goods` | `product` (stockeable) | Bienes físicos con inventario |
+| `consumable` | `consu` (consumible) | Consumibles con cantidad, sin valoración estricta |
+| `service` | `product` (stockeable) | Servicios cuantificados (horas, días, etc.) |
 
-Resumen de lo realizado hasta el estado actual.
+> Los servicios se marcan con `zoho_product_type="service"` para mantener la referencia del tipo original.
 
-### Etapa 1: estabilizacion de la conexion con Zoho
+---
 
-Problema detectado:
+## Logs y Diagnóstico
 
-- El modulo consultaba `https://books.zoho.com/api/v3/items`
+### Log Técnico Principal
 
-Resultado:
 
-- Zoho devolvia error `400`
-- El log indicaba que debia usarse el dominio `zohoapis`
 
-Correccion aplicada:
+### Mensajes Clave a Revisar
 
-- Se cambio la base API a `https://www.zohoapis.<dc>/books`
+| Mensaje | Significado |
+|---------|-------------|
+| `Starting product import from Zoho` | Inicio de importación de productos |
+| `Fetching page X` | Paginación de la API |
+| `Fetched X products from Zoho` | Total de productos leídos |
+| `Fetched X customer contacts from Zoho` | Total de clientes leídos |
+| `Fetched X vendor contacts from Zoho` | Total de proveedores leídos |
 
-### Etapa 2: correccion de la ruta de API
+---
 
-Problema detectado:
+## Changelog / Historial de Versiones
 
-- El modulo usaba `/books/api/v3/...`
+### v18.0.1.2.5 — Mapeo de tipos de producto corregido
+**Fecha:** 2026-05-20  
+**Cambios:**
+- Corregido mapeo de tipos de producto Zoho → Odoo para permitir cantidad en servicios y consumibles.
+- Servicios (`service`) ahora se crean como stockeables (`product`) para mantener cantidad.
+- Consumibles (`consumable`) se crean como `consu` en Odoo.
+- Añadido campo `zoho_product_type` en `product.template` para referencia del tipo original.
+- Añadido modelo `product_template.py` con campo personalizado.
 
-Resultado:
+**Archivos modificados:**
+- `models/zoho_product_import.py`
+- `models/product_template.py` *(nuevo)*
+- `models/__init__.py`
+- `__manifest__.py`
 
-- Zoho respondia con `400` e `Internal Error`
+---
 
-Correccion aplicada:
+### v18.0.1.2.6 — Importación completa de partners
+**Fecha:** 2026-05-21  
+**Cambios:**
+- Importación completa de datos de partners: dirección de envío, contactos asociados, NIT/ID fiscal desde custom fields.
+- Añadido mapeo de idioma (`language_code` → `lang`).
+- Añadido mapeo de términos de pago (`payment_terms` → `property_payment_term_id`).
+- Añadido importación de límite de crédito (`credit_limit`).
+- Añadido importación de etiquetas/tags (`tags` → `category_id`).
+- Añadido importación de personas de contacto (`contact_persons` → contactos hijos).
+- Añadido importación de dirección de envío (`shipping_address` → contacto hijo `delivery`).
+- Mejorada extracción de NIT/ID fiscal desde múltiples campos (`tax_id`, `gst_no`, `cf_*`).
 
-- Se cambio la ruta a `/books/v3/...`
+**Archivos modificados:**
+- `models/zoho_partner_import.py`
+- `__manifest__.py`
+- `README.md`
 
-### Etapa 3: mejora del diagnostico de errores
+---
 
-Problema detectado:
+### v18.0.1.2.4 — Base de mapeo dinámico de tipos
+**Fecha:** Anterior  
+**Cambios:**
+- Compatibilidad dinámica entre campos `type` y `detailed_type` según instancia Odoo.
+- Selección dinámica de valores válidos para tipo de producto.
 
-- Odoo mostraba errores genericos tipo `400 Client Error`
+---
 
-Correccion aplicada:
+### v18.0.1.2.3 — Compatibilidad de tipo de producto
+**Fecha:** Anterior  
+**Cambios:**
+- Ajuste del mapeo de tipo de producto para evitar errores `Wrong value for product.template.type`.
 
-- Se mejoro la extraccion del mensaje JSON devuelto por Zoho
-- El log ahora conserva mensajes tecnicos mas utiles
+---
 
-### Etapa 4: validacion de lectura real desde Zoho
+### v18.0.1.2.2 — Mejora del wizard
+**Fecha:** Anterior  
+**Cambios:**
+- Feedback del wizard basado en logs funcionales de importación.
 
-Resultado:
+---
 
-- El modulo comenzo a leer correctamente productos desde Zoho
-- Se confirmo en log la lectura paginada de productos
+### v18.0.1.2.1 — Ajuste de mapeo de tipo
+**Fecha:** Anterior  
+**Cambios:**
+- Corrección inicial del mapeo de tipo de producto.
 
-### Etapa 5: correccion del mapeo de tipo de producto
+---
 
-Problemas detectados en distintas pruebas:
+### v18.0.1.2.0 — Base inicial
+**Fecha:** Anterior  
+**Cambios:**
+- Base inicial de la etapa de pruebas.
+- Autenticación OAuth2 funcional.
+- Importación de partners y productos básica.
 
-- `Wrong value for product.template.type: 'product'`
-- `Invalid field 'detailed_type' on model 'product.template'`
+---
 
-Interpretacion:
+## Validación Previo a Migración en Producción
 
-- La instancia no era compatible con una unica suposicion fija sobre el campo de tipo del producto
+Antes de usar Zoho de producción o mover el módulo a servidor de pruebas del negocio:
 
-Correccion aplicada:
+- [ ] Probar con subconjunto pequeño de productos
+- [ ] Probar clientes y proveedores reales
+- [ ] Probar precios e impuestos
+- [ ] Probar stock por producto
+- [ ] Probar documentos comerciales
+- [ ] Validar duplicados por `zoho_item_id` y `zoho_contact_id`
+- [ ] Confirmar si se desea actualizar registros existentes o solo crear nuevos
+- [ ] Verificar que direcciones, contactos y NIT se importen correctamente
+- [ ] Validar términos de pago y límites de crédito
 
-- El importador ahora inspecciona en tiempo de ejecucion si existe `type` o `detailed_type`
-- Tambien inspecciona las opciones validas del campo y selecciona una compatible
+---
 
-### Etapa 6: mejora del feedback del wizard
+## Próximas Fases / Pendientes
 
-Problema detectado:
+- [ ] Importación de ventas (sale orders)
+- [ ] Importación de movimientos de inventario
+- [ ] Importación de facturas y vendor bills
+- [ ] Importación de pagos
+- [ ] Importación de notas de crédito
+- [ ] Coherencia de impuestos y unidades de medida
+- [ ] Pruebas integrales en servidor de pruebas del negocio
 
-- El wizard podia terminar con mensaje de exito generico aunque hubiera fallos por registro
+---
 
-Correccion aplicada:
+## Soporte
 
-- Se agrego un resumen final basado en los logs funcionales de importacion
+Para reportar problemas o solicitar mejoras, contactar al desarrollador o crear un issue en el repositorio.
 
-### Etapa 7: correccion del mapeo de tipos de producto Zoho
+---
 
-Problemas detectados:
-
-- Los servicios en Zoho pueden tener cantidad (ej: 10 horas de consultoria)
-- En Odoo, el tipo `service` no permite gestion de stock
-- El mapeo original no consideraba esta diferencia
-
-Correccion aplicada:
-
-- Se creo metodo `_get_product_type_vals` con mapeo corregido:
-  - `goods` (Zoho) → `product` (Odoo) - stockeable
-  - `consumable` (Zoho) → `consu` (Odoo) - consumible
-  - `service` (Zoho) → `product` (Odoo) - forzado a stockeable para permitir cantidad
-- Se agrego campo `zoho_product_type` en `product.template` para guardar el tipo original de Zoho
-- El sistema ahora detecta automaticamente si usar `type` o `detailed_type` segun la version de Odoo
-
-### Etapa 8: mejora del manejo de errores de API de Zoho
-
-Problema detectado:
-
-- Los errores de Zoho se mostraban como mensajes genericos `400 Client Error`
-- No se podia identificar facilmente la causa raiz del error
-
-Correccion aplicada:
-
-- Se creo metodo `_extract_zoho_error` para extraer mensajes detallados de la respuesta JSON de Zoho
-- El log ahora muestra el codigo de error y el mensaje descriptivo de Zoho
-- Mejora significativa en el diagnostico de problemas de conexion y autenticacion
-
-## Estado actual conocido
-
-Confirmado en pruebas recientes:
-
-- Partners importan correctamente
-- Productos se leen correctamente desde Zoho
-- El flujo de creacion de productos ya fue ajustado varias veces contra errores reales del log
-
-Pendiente de validar completamente:
-
-- Creacion exitosa final de productos en esta misma instancia tras el ultimo ajuste
-- Importacion de ventas
-- Importacion de movimientos de inventario
-- Coherencia de impuestos, unidades de medida y stock
-- Pruebas integrales en servidor de pruebas del negocio
-
-## Procedimiento recomendado por instancia
-
-Cada nueva instancia donde se despliegue este modulo debe validar lo siguiente antes de una migracion real:
-
-1. Datacenter correcto de Zoho.
-2. `redirect_url` correcto para esa instancia.
-3. Callback accesible.
-4. Activacion correcta del conector.
-5. `organization_id` detectado o confirmado manualmente.
-6. Prueba de conexion exitosa.
-7. Importacion de partners de prueba.
-8. Importacion de productos de prueba.
-9. Revision de logs funcionales y tecnicos.
-10. Validacion con usuarios del negocio.
-
-## Validacion previa a migracion
-
-Antes de usar Zoho de produccion o mover el modulo a un servidor de pruebas:
-
-- Probar con un subconjunto pequeno de productos
-- Probar clientes y proveedores reales
-- Probar precios e impuestos
-- Probar stock por producto
-- Probar documentos comerciales
-- Validar duplicados por `zoho_item_id` y `zoho_contact_id`
-- Confirmar si se desea actualizar registros existentes o solo crear nuevos
-
-## Logs y diagnostico
-
-### Log tecnico principal
-
-- `config/odoo-server.log`
-
-### Que revisar primero
-
-- `Starting product import from Zoho`
-- `Fetching page`
-- `Response status`
-- `Fetched X products from Zoho`
-- `Product '...'`
-- `Fetched X customer contacts from Zoho`
-- `Fetched X vendor contacts from Zoho`
-
-### Observacion importante
-
-Existe un error independiente en esta instancia relacionado con `autovacuum` y modelos transitorios:
-
-- `TypeError: '>' not supported between instances of 'int' and 'str'`
-
-Ese error aparece en muchos modelos del sistema y no forma parte directa del flujo de Zoho Books. Debe tratarse aparte.
-
-## Versionado
-
-Regla de trabajo aplicada durante este desarrollo:
-
-- Cada cambio funcional del modulo debe reflejarse en `__manifest__.py`
-
-## Changelog resumido reciente
-
-- `18.0.1.2.0`
-  Base inicial de esta etapa de pruebas.
-- `18.0.1.2.1`
-  Ajuste del mapeo de tipo de producto para Odoo.
-- `18.0.1.2.2`
-  Compatibilidad dinamica entre `type` y `detailed_type` y mejora del wizard.
-- `18.0.1.2.3`
-  Seleccion dinamica de valores validos para el tipo de producto segun la instancia.
-- `18.0.1.2.4`
-  Correccion del mapeo de tipos de producto Zoho (goods, service, consumable).
-- `18.0.1.2.5`
-  Agregado campo `zoho_product_type` y mejora del manejo de errores de API de Zoho.
-
-## Siguiente fase sugerida
-
-En la siguiente ronda de pruebas:
-
-- Cargar operaciones de ventas en Zoho
-- Cargar movimientos de inventario
-- Repetir importacion
-- Verificar trazabilidad completa en Odoo
-- Confirmar si el modulo queda listo para servidor de pruebas del negocio
+**Repositorio:** [github.com/hcalvofernandez/zoho-odoo-import-yenier](https://github.com/hcalvofernandez/zoho-odoo-import-yenier)
