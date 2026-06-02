@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DoorAndDoor - Botón de Entrega desde Ventas
+    Vistas heredadas de sale.order
+-->
+<odoo>
+    <data>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Formulario de Pedido de Venta (sale.view_order_form) -->
+        <!-- ============================================================ -->
+
+        <!-- 1. Botón inteligente (stat button) en el button_box -->
+        <record id="view_order_form_inherit_delivery_stat_button" model="ir.ui.view">
+            <field name="name">sale.order.form.delivery.stat.button</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_view_delivery"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-truck"
+                            invisible="state not in ('sale', 'done')"
+                            groups="stock.group_stock_user">
+                        <field name="delivery_count" widget="statinfo" string="Entregas"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- 2. Botón de acción "Entregar" en el header -->
+        <!-- Usamos //header position="inside" para máxima robustez -->
+        <record id="view_order_form_inherit_delivery_action_button" model="ir.ui.view">
+            <field name="name">sale.order.form.delivery.action.button</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_open_delivery"
+                            type="object"
+                            string="Entregar"
+                            class="btn-primary"
+                            icon="fa-truck"
+                            invisible="state != 'sale'"
+                            groups="stock.group_stock_user"
+                            help="Navegar al picking de entrega. Si no existe, se creará uno nuevo en el almacén de la compañía."/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Vista Tree de Pedidos de Venta (sale.view_order_tree) -->
+        <!-- ============================================================ -->
+        <record id="view_order_tree_inherit_delivery_count" model="ir.ui.view">
+            <field name="name">sale.order.tree.delivery.count</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="delivery_count" string="Entregas" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Vista Tree de Cotizaciones (sale.view_quotation_tree) -->
+        <!-- ============================================================ -->
+        <record id="view_quotation_tree_inherit_delivery_count" model="ir.ui.view">
+            <field name="name">sale.order.tree.quotation.delivery.count</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="delivery_count" string="Entregas" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
