@@ -17,7 +17,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_uom_qty']" position="after">
                     <field name="qty_ordered" optional="show" readonly="1"/>
-                    <field name="qty_delivered_this" optional="show"/>
+                    <field name="qty_delivered_this" optional="show" readonly="1"/>
                     <field name="qty_pending" optional="show" readonly="1"/>
                 </xpath>
             </field>
@@ -34,7 +34,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_uom_qty']" position="after">
                     <field name="qty_ordered" optional="show" readonly="1"/>
-                    <field name="qty_delivered_this" optional="show"/>
+                    <field name="qty_delivered_this" optional="show" readonly="1"/>
                     <field name="qty_pending" optional="show" readonly="1"/>
                 </xpath>
             </field>
@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_uom_qty']" position="after">
                     <field name="qty_ordered" readonly="1"/>
-                    <field name="qty_delivered_this"/>
+                    <field name="qty_delivered_this" readonly="1"/>
                     <field name="qty_pending" readonly="1"/>
                 </xpath>
             </field>

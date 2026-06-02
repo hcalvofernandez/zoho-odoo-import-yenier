@@ -2,6 +2,11 @@
 <!--
     DoorAndDoor - Estado de Entrega en Picking
     Vistas heredadas de stock.picking
+
+    CORRECCIÓN Odoo 18:
+    - El campo quantity_done fue renombrado en stock.move
+    - Las cantidades realizadas están en stock.move.line.qty_done
+    - qty_delivered_this es ahora un campo compute readonly
 -->
 <odoo>
     <data>
@@ -26,9 +31,10 @@
                            optional="show"
                            readonly="1"/>
 
-                    <!-- Cantidad Entregada en ESTE picking (editable, sincronizado con quantity_done) -->
+                    <!-- Cantidad Entregada en ESTE picking (compute, readonly) -->
                     <field name="qty_delivered_this" 
-                           optional="show"/>
+                           optional="show"
+                           readonly="1"/>
 
                     <!-- Cantidad Pendiente (compute en tiempo real) -->
                     <field name="qty_pending" 
