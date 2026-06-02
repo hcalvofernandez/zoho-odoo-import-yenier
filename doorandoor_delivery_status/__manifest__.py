@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'DoorAndDoor - Estado de Entrega en Picking',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.4',
     'category': 'Inventory/Sales',
     'summary': 'Muestra cantidad pedida, entregada y pendiente en las líneas de movimiento de entregas',
     'description': """
