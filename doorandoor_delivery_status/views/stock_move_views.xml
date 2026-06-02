@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DoorAndDoor - Estado de Entrega en Picking
+    Vistas heredadas de stock.move
+-->
+<odoo>
+    <data>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Vista Tree de Movimientos (stock.view_move_tree)     -->
+        <!-- ============================================================ -->
+        <record id="view_move_tree_inherit_delivery_status" model="ir.ui.view">
+            <field name="name">stock.move.tree.delivery.status</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="qty_ordered" optional="show" readonly="1"/>
+                    <field name="qty_delivered_this" optional="show"/>
+                    <field name="qty_pending" optional="show" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Vista Tree de Movimientos (stock.view_move_tree_picking) -->
+        <!-- ============================================================ -->
+        <record id="view_move_tree_picking_inherit_delivery_status" model="ir.ui.view">
+            <field name="name">stock.move.tree.picking.delivery.status</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree_picking"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="qty_ordered" optional="show" readonly="1"/>
+                    <field name="qty_delivered_this" optional="show"/>
+                    <field name="qty_pending" optional="show" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Vista Form de Movimiento (stock.view_move_form)        -->
+        <!-- ============================================================ -->
+        <record id="view_move_form_inherit_delivery_status" model="ir.ui.view">
+            <field name="name">stock.move.form.delivery.status</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="qty_ordered" readonly="1"/>
+                    <field name="qty_delivered_this"/>
+                    <field name="qty_pending" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

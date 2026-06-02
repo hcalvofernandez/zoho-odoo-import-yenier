@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DoorAndDoor - Estado de Entrega en Picking
+    Vistas heredadas de stock.picking
+-->
+<odoo>
+    <data>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Formulario de Picking (stock.view_picking_form)    -->
+        <!-- Agrega columnas en el tree de move_ids_without_package       -->
+        <!-- ============================================================ -->
+        <record id="view_picking_form_inherit_delivery_status" model="ir.ui.view">
+            <field name="name">stock.picking.form.delivery.status</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <!-- 
+                    XPath para el tree de move_ids_without_package.
+                    Insertamos después del campo product_uom_qty (cantidad demandada)
+                -->
+                <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="after">
+                    <!-- Cantidad Pedida (desde la venta original) -->
+                    <field name="qty_ordered" 
+                           optional="show"
+                           readonly="1"/>
+
+                    <!-- Cantidad Entregada en ESTE picking (editable, sincronizado con quantity_done) -->
+                    <field name="qty_delivered_this" 
+                           optional="show"/>
+
+                    <!-- Cantidad Pendiente (compute en tiempo real) -->
+                    <field name="qty_pending" 
+                           optional="show"
+                           readonly="1"
+                           decoration-danger="qty_pending &lt; 0"
+                           decoration-success="qty_pending == 0"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- HERENCIA: Formulario de Picking - Tab Detailed Operations      -->
+        <!-- Agrega columnas en move_line_ids_without_package (operaciones) -->
+        <!-- ============================================================ -->
+        <record id="view_picking_form_inherit_delivery_status_lines" model="ir.ui.view">
+            <field name="name">stock.picking.form.delivery.status.lines</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <!-- 
+                    XPath para el tree de move_line_ids_without_package (detailed operations)
+                -->
+                <xpath expr="//field[@name='move_line_ids_without_package']/tree/field[@name='quantity']" position="after">
+                    <field name="move_id" invisible="1"/>
+                    <field name="qty_ordered" 
+                           optional="hide"
+                           readonly="1"/>
+                    <field name="qty_delivered_this" 
+                           optional="hide"
+                           readonly="1"/>
+                    <field name="qty_pending" 
+                           optional="hide"
+                           readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
