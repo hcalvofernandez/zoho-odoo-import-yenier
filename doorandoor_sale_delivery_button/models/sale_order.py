@@ -282,12 +282,12 @@ class SaleOrder(models.Model):
             # Una sola entrega: abrir formulario
             return self._action_open_picking_form(self.delivery_ids[0])
 
-        # Múltiples entregas: abrir vista tree
+        # Múltiples entregas: abrir vista lista
         return {
             'type': 'ir.actions.act_window',
             'name': _('Entregas de %s') % self.name,
             'res_model': 'stock.picking',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('sale_id', '=', self.id)],
             'context': {
                 'default_sale_id': self.id,

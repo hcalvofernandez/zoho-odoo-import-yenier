@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'DoorAndDoor - Botón de Entrega desde Ventas',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'category': 'Sales/Inventory',
     'summary': 'Permite al gestor de ventas navegar directamente al picking de entrega desde el pedido de venta confirmado',
     'description': """
