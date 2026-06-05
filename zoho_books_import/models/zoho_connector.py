@@ -61,6 +61,13 @@ class ZohoConnector(models.Model):
     _sql_constraints = [
         ("unique_connector", "UNIQUE(name)", "Connector name must be unique!")
     ]
+
+    @api.model
+    def name_create(self, name):
+        raise UserError(_(
+            "Zoho connectors require a full configuration. "
+            "Please use 'Create and Edit...' to enter the Client ID and Client Secret."
+        ))
     
     @api.depends("access_token", "expires_in")
     def _compute_token_valid(self):

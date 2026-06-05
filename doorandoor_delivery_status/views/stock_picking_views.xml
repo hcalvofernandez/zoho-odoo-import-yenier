@@ -3,44 +3,13 @@
     DoorAndDoor - Estado de Entrega en Picking
     Vistas heredadas de stock.picking y stock.move
 
-    CORRECCIÓN Odoo 18 - Versión 1.0.4:
-    - El tree embebido en stock.view_picking_form no se puede heredar directamente
-    - Heredamos stock.view_move_picking_tree que es la vista tree usada por move_ids_without_package
-    - También heredamos stock.view_stock_move_line_detailed_operation_tree para detailed operations
+    CORRECCIÓN Odoo 18 - Versión 1.0.6:
+    - No todas las bases Odoo 18 exponen el XML ID stock.view_move_picking_tree
+    - La grilla principal ya se cubre desde stock_move_views.xml con vistas stock.move estables
+    - Aquí heredamos solo la vista de operaciones detalladas
 -->
 <odoo>
     <data>
-
-        <!-- ============================================================ -->
-        <!-- HERENCIA: Vista Tree de Movimientos de Picking                 -->
-        <!-- (stock.view_move_picking_tree) - Usada por move_ids_without_package -->
-        <!-- ============================================================ -->
-        <record id="view_move_picking_tree_inherit_delivery_status" model="ir.ui.view">
-            <field name="name">stock.move.picking.tree.delivery.status</field>
-            <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
-            <field name="priority">99</field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_uom_qty']" position="after">
-                    <!-- Cantidad Pedida (desde la venta original) -->
-                    <field name="qty_ordered" 
-                           optional="show"
-                           readonly="1"/>
-
-                    <!-- Cantidad Entregada en ESTE picking (compute, readonly) -->
-                    <field name="qty_delivered_this" 
-                           optional="show"
-                           readonly="1"/>
-
-                    <!-- Cantidad Pendiente (compute en tiempo real) -->
-                    <field name="qty_pending" 
-                           optional="show"
-                           readonly="1"
-                           decoration-danger="qty_pending &lt; 0"
-                           decoration-success="qty_pending == 0"/>
-                </xpath>
-            </field>
-        </record>
 
         <!-- ============================================================ -->
         <!-- HERENCIA: Vista Tree de Operaciones Detalladas                 -->

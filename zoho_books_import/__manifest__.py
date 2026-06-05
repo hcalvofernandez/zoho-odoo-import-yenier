@@ -1,6 +1,6 @@
 {
     "name": "Zoho Books Import (Unidirectional)",
-    "version": "18.0.1.2.5",
+    "version": "18.0.1.2.6",
     "category": "Accounting",
     "summary": "Import data from Zoho Books to Odoo 18 CE (One-way only)",
     "description": """

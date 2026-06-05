@@ -8,7 +8,8 @@
                 <form string="Import from Zoho">
                     <sheet>
                         <group>
-                            <field name="connector_id"/>
+                            <field name="connector_id"
+                                   options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                         </group>
                         <group string="Select Data to Import">
                             <field name="import_products"/>
