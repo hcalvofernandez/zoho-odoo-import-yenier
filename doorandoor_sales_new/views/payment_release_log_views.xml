@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_doorandoor_payment_release_log_tree" model="ir.ui.view">
+            <field name="name">doorandoor.payment.release.log.list</field>
+            <field name="model">doorandoor.payment.release.log</field>
+            <field name="arch" type="xml">
+                <list string="Payment Release Logs">
+                    <field name="move_id"/>
+                    <field name="sale_order_id"/>
+                    <field name="amount_applied"/>
+                    <field name="policy_used"/>
+                    <field name="write_date"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_doorandoor_payment_release_log" model="ir.actions.act_window">
+            <field name="name">Payment Release Logs</field>
+            <field name="res_model">doorandoor.payment.release.log</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

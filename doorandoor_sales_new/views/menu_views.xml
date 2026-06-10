@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem
+            id="menu_doorandoor_sales_new_root"
+            name="DoorAndDoor Sales"
+            parent="sale.sale_menu_root"
+            sequence="90"/>
+
+        <menuitem
+            id="menu_doorandoor_fulfillment_line"
+            name="Fulfillment Lines"
+            parent="menu_doorandoor_sales_new_root"
+            action="action_doorandoor_fulfillment_line"
+            sequence="10"/>
+
+        <menuitem
+            id="menu_doorandoor_payment_release_log"
+            name="Payment Release Logs"
+            parent="menu_doorandoor_sales_new_root"
+            action="action_doorandoor_payment_release_log"
+            sequence="20"/>
+    </data>
+</odoo>

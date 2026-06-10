@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_doorandoor_sales_new" model="ir.ui.view">
+            <field name="name">account.move.form.doorandoor.sales.new</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button
+                        name="action_sync_fulfillment"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Sync</span>
+                            <span class="o_stat_text">Fulfillment</span>
+                        </div>
+                    </button>
+                    <button
+                        name="action_view_generated_sale_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="sale_order_id" string="Sale Order" widget="statinfo"/>
+                    </button>
+                    <button
+                        name="action_view_fulfillment_lines"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-tasks"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="fulfillment_line_count" string="Fulfillment" widget="statinfo"/>
+                    </button>
+                    <button
+                        name="action_view_pickings"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="picking_count" string="Dispatches" widget="statinfo"/>
+                    </button>
+                    <button
+                        name="action_view_mrp_productions"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-industry"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="mrp_production_count" string="Manufacturing" widget="statinfo"/>
+                    </button>
+                    <button
+                        name="%(action_doorandoor_payment_release_log)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="payment_release_log_count" string="Releases" widget="statinfo"/>
+                    </button>
+                </xpath>
+
+                <xpath expr="//notebook" position="inside">
+                    <page string="Fulfillment Setup" invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <group string="DoorAndDoor Fulfillment">
+                            <group>
+                                <field name="release_state"/>
+                                <field name="payment_release_policy"/>
+                                <field name="fulfillment_route_policy"/>
+                            </group>
+                            <group>
+                                <field name="partial_stock_policy"/>
+                                <field name="picking_creation_policy"/>
+                                <field name="mrp_creation_policy"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Fulfillment" invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="fulfillment_line_ids" readonly="1">
+                            <list>
+                                <field name="product_id"/>
+                                <field name="amount_total"/>
+                                <field name="amount_released"/>
+                                <field name="picking_id"/>
+                                <field name="mrp_production_id"/>
+                                <field name="state"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Payment Releases" invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="payment_release_log_ids" readonly="1">
+                            <list>
+                                <field name="amount_applied"/>
+                                <field name="policy_used"/>
+                                <field name="notes"/>
+                                <field name="write_date"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

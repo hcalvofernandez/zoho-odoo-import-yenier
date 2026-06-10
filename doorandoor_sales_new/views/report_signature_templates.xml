@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_signature" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[hasclass('page')]" position="inside">
+                <div class="mt-5 pt-4">
+                    <t t-set="invoice_pickings" t-value="o.fulfillment_line_ids.mapped('picking_id')"/>
+                    <t t-if="invoice_pickings">
+                        <div class="mb-3">
+                            <strong>Dispatch Order</strong>:
+                            <span t-esc="', '.join(invoice_pickings.mapped('name'))"/>
+                        </div>
+                    </t>
+                    <div class="row">
+                        <div class="col-6">
+                            <div style="margin-top: 30px;">
+                                <strong>Invoiced by</strong>
+                            </div>
+                            <div style="border-top: 1px solid #000; margin-top: 45px; padding-top: 6px; min-height: 22px;">
+                                <span t-esc="(o.invoice_user_id or o.create_uid).name"/>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div style="margin-top: 30px;">
+                                <strong>Received by</strong>
+                            </div>
+                            <div style="border-top: 1px solid #000; margin-top: 45px; padding-top: 6px; min-height: 22px;">
+                                &amp;nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="report_saleorder_document_signature" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[hasclass('page')]" position="inside">
+                <div class="mt-5 pt-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <div style="margin-top: 30px;">
+                                <strong>Prepared by</strong>
+                            </div>
+                            <div style="border-top: 1px solid #000; margin-top: 45px; padding-top: 6px; min-height: 22px;">
+                                <span t-esc="(o.user_id or o.create_uid).name"/>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div style="margin-top: 30px;">
+                                <strong>Approved by</strong>
+                            </div>
+                            <div style="border-top: 1px solid #000; margin-top: 45px; padding-top: 6px; min-height: 22px;">
+                                &amp;nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="report_delivery_document_signature" inherit_id="stock.report_delivery_document">
+            <xpath expr="//div[hasclass('page')]" position="inside">
+                <div class="mt-5 pt-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <div style="margin-top: 30px;">
+                                <strong>Delivered by</strong>
+                            </div>
+                            <div style="border-top: 1px solid #000; margin-top: 45px; padding-top: 6px; min-height: 22px;">
+                                <span t-esc="(o.sale_id.user_id or o.write_uid or o.create_uid).name"/>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div style="margin-top: 30px;">
+                                <strong>Received by</strong>
+                            </div>
+                            <div style="border-top: 1px solid #000; margin-top: 45px; padding-top: 6px; min-height: 22px;">
+                                &amp;nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

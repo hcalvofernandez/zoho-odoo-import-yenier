@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_ddsn_stock_visibility" model="ir.ui.view">
+            <field name="name">sale.order.form.ddsn.stock.visibility</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
+                    <field name="ddsn_stock_display" string="Stock" optional="show" readonly="1"/>
+                    <field name="ddsn_warehouse_stock_html" string="Warehouses" widget="html" optional="show" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

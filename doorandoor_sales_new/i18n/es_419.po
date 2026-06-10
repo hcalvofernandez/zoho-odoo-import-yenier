@@ -1,0 +1,362 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* doorandoor_sales_new
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"POT-Creation-Date: 2026-06-07 20:10+0000\n"
+"PO-Revision-Date: 2026-06-07 20:10+0000\n"
+"Last-Translator: Codex\n"
+"Language-Team: Spanish (Latin America)\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: doorandoor_sales_new
+#: model:ir.module.module,shortdesc:doorandoor_sales_new.module_doorandoor_sales_new
+msgid "DoorAndDoor Sales New"
+msgstr "DoorAndDoor Ventas Nuevo"
+
+#. module: doorandoor_sales_new
+#: model:ir.module.module,summary:doorandoor_sales_new.module_doorandoor_sales_new
+msgid "Invoice-driven sales, payment release, delivery and production orchestration"
+msgstr "Ventas guiadas por factura, liberación por pago y orquestación de entregas y producción"
+
+#. module: doorandoor_sales_new
+msgid "Sales"
+msgstr "Ventas"
+
+#. module: doorandoor_sales_new
+msgid "DoorAndDoor Sales"
+msgstr "DoorAndDoor Ventas"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment"
+msgstr "Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment Lines"
+msgstr "Líneas de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment Line"
+msgstr "Línea de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "DoorAndDoor Fulfillment Line"
+msgstr "Línea de Cumplimiento DoorAndDoor"
+
+#. module: doorandoor_sales_new
+msgid "DoorAndDoor Fulfillment"
+msgstr "Cumplimiento DoorAndDoor"
+
+#. module: doorandoor_sales_new
+msgid "Sync"
+msgstr "Sincronizar"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment"
+msgstr "Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment Defaults"
+msgstr "Valores Predeterminados de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment Setup"
+msgstr "Configuración de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Generated Sale Order"
+msgstr "Pedido de Venta Generado"
+
+#. module: doorandoor_sales_new
+msgid "Generated Sale Order Line"
+msgstr "Línea de Pedido de Venta Generada"
+
+#. module: doorandoor_sales_new
+msgid "Sale Order"
+msgstr "Pedido de Venta"
+
+#. module: doorandoor_sales_new
+msgid "Sale Order Line"
+msgstr "Línea de Pedido de Venta"
+
+#. module: doorandoor_sales_new
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: doorandoor_sales_new
+msgid "Invoice Line"
+msgstr "Línea de Factura"
+
+#. module: doorandoor_sales_new
+msgid "Release State"
+msgstr "Estado de Liberación"
+
+#. module: doorandoor_sales_new
+msgid "Not Ready"
+msgstr "No Listo"
+
+#. module: doorandoor_sales_new
+msgid "Partially Released"
+msgstr "Liberado Parcialmente"
+
+#. module: doorandoor_sales_new
+msgid "Released"
+msgstr "Liberado"
+
+#. module: doorandoor_sales_new
+msgid "Delivered"
+msgstr "Entregado"
+
+#. module: doorandoor_sales_new
+msgid "Payment Release Policy"
+msgstr "Política de Liberación por Pago"
+
+#. module: doorandoor_sales_new
+msgid "Default Payment Release Policy"
+msgstr "Política Predeterminada de Liberación por Pago"
+
+#. module: doorandoor_sales_new
+msgid "Prorated"
+msgstr "Prorrateado"
+
+#. module: doorandoor_sales_new
+msgid "Sequential by Line"
+msgstr "Secuencial por Línea"
+
+#. module: doorandoor_sales_new
+msgid "Sequential by Priority"
+msgstr "Secuencial por Prioridad"
+
+#. module: doorandoor_sales_new
+msgid "Manual"
+msgstr "Manual"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment Route Policy"
+msgstr "Política de Ruta de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Default Fulfillment Route Policy"
+msgstr "Política Predeterminada de Ruta de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "By Stock Availability"
+msgstr "Según Disponibilidad de Inventario"
+
+#. module: doorandoor_sales_new
+msgid "By Product Route"
+msgstr "Según Ruta del Producto"
+
+#. module: doorandoor_sales_new
+msgid "By Product Type"
+msgstr "Según Tipo de Producto"
+
+#. module: doorandoor_sales_new
+msgid "Force Manufacturing"
+msgstr "Forzar Fabricación"
+
+#. module: doorandoor_sales_new
+msgid "Force Stock"
+msgstr "Forzar Inventario"
+
+#. module: doorandoor_sales_new
+msgid "Partial Stock Policy"
+msgstr "Política de Inventario Parcial"
+
+#. module: doorandoor_sales_new
+msgid "Default Partial Stock Policy"
+msgstr "Política Predeterminada de Inventario Parcial"
+
+#. module: doorandoor_sales_new
+msgid "Deliver Stock and Manufacture Rest"
+msgstr "Entregar Inventario y Fabricar el Resto"
+
+#. module: doorandoor_sales_new
+msgid "Manufacture All"
+msgstr "Fabricar Todo"
+
+#. module: doorandoor_sales_new
+msgid "Wait Full Stock"
+msgstr "Esperar Inventario Completo"
+
+#. module: doorandoor_sales_new
+msgid "Reserve Partial"
+msgstr "Reservar Parcial"
+
+#. module: doorandoor_sales_new
+msgid "Picking Creation Policy"
+msgstr "Política de Creación de Picking"
+
+#. module: doorandoor_sales_new
+msgid "Default Picking Creation Policy"
+msgstr "Política Predeterminada de Creación de Picking"
+
+#. module: doorandoor_sales_new
+msgid "One Picking per Payment"
+msgstr "Un Picking por Pago"
+
+#. module: doorandoor_sales_new
+msgid "Grouped by Invoice"
+msgstr "Agrupado por Factura"
+
+#. module: doorandoor_sales_new
+msgid "Manual Release"
+msgstr "Liberación Manual"
+
+#. module: doorandoor_sales_new
+msgid "Manufacturing Creation Policy"
+msgstr "Política de Creación de Fabricación"
+
+#. module: doorandoor_sales_new
+msgid "Default Manufacturing Creation Policy"
+msgstr "Política Predeterminada de Creación de Fabricación"
+
+#. module: doorandoor_sales_new
+msgid "One MO per Released Line"
+msgstr "Una OF por Línea Liberada"
+
+#. module: doorandoor_sales_new
+msgid "Group by Product"
+msgstr "Agrupar por Producto"
+
+#. module: doorandoor_sales_new
+msgid "Fulfillment Line Count"
+msgstr "Cantidad de Líneas de Cumplimiento"
+
+#. module: doorandoor_sales_new
+msgid "Picking Count"
+msgstr "Cantidad de Pickings"
+
+#. module: doorandoor_sales_new
+msgid "Dispatches"
+msgstr "Despachos"
+
+#. module: doorandoor_sales_new
+msgid "Manufacturing"
+msgstr "Fabricación"
+
+#. module: doorandoor_sales_new
+msgid "Invoiced by"
+msgstr "Facturado por"
+
+#. module: doorandoor_sales_new
+msgid "Received by"
+msgstr "Recibido por"
+
+#. module: doorandoor_sales_new
+msgid "Prepared by"
+msgstr "Preparado por"
+
+#. module: doorandoor_sales_new
+msgid "Approved by"
+msgstr "Aprobado por"
+
+#. module: doorandoor_sales_new
+msgid "Delivered by"
+msgstr "Entregado por"
+
+#. module: doorandoor_sales_new
+msgid "Dispatch Order"
+msgstr "Orden de despacho"
+
+#. module: doorandoor_sales_new
+msgid "Available Stock"
+msgstr "Stock disponible"
+
+#. module: doorandoor_sales_new
+msgid "Stock UoM"
+msgstr "UdM de stock"
+
+#. module: doorandoor_sales_new
+msgid "Stock Available"
+msgstr "Stock disponible"
+
+#. module: doorandoor_sales_new
+msgid "Stock"
+msgstr "Stock"
+
+#. module: doorandoor_sales_new
+msgid "Warehouses"
+msgstr "Almacenes"
+
+#. module: doorandoor_sales_new
+msgid "Production Count"
+msgstr "Cantidad de Producciones"
+
+#. module: doorandoor_sales_new
+msgid "Picking"
+msgstr "Picking"
+
+#. module: doorandoor_sales_new
+msgid "Manufacturing Order"
+msgstr "Orden de Fabricación"
+
+#. module: doorandoor_sales_new
+msgid "Product"
+msgstr "Producto"
+
+#. module: doorandoor_sales_new
+msgid "Qty Invoiced"
+msgstr "Cantidad Facturada"
+
+#. module: doorandoor_sales_new
+msgid "Qty Released"
+msgstr "Cantidad Liberada"
+
+#. module: doorandoor_sales_new
+msgid "Qty Sent to Stock"
+msgstr "Cantidad Enviada a Inventario"
+
+#. module: doorandoor_sales_new
+msgid "Qty Sent to MRP"
+msgstr "Cantidad Enviada a Producción"
+
+#. module: doorandoor_sales_new
+msgid "Qty Delivered"
+msgstr "Cantidad Entregada"
+
+#. module: doorandoor_sales_new
+msgid "Qty Pending Payment"
+msgstr "Cantidad Pendiente de Pago"
+
+#. module: doorandoor_sales_new
+msgid "Qty Pending Delivery"
+msgstr "Cantidad Pendiente de Entrega"
+
+#. module: doorandoor_sales_new
+msgid "Line Amount"
+msgstr "Importe de la Línea"
+
+#. module: doorandoor_sales_new
+msgid "Released Amount"
+msgstr "Importe Liberado"
+
+#. module: doorandoor_sales_new
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: doorandoor_sales_new
+msgid "State"
+msgstr "Estado"
+
+#. module: doorandoor_sales_new
+msgid "Pending Payment"
+msgstr "Pendiente de Pago"
+
+#. module: doorandoor_sales_new
+msgid "Ready for Stock"
+msgstr "Listo para Inventario"
+
+#. module: doorandoor_sales_new
+msgid "Ready for Manufacturing"
+msgstr "Listo para Fabricación"
+
+#. module: doorandoor_sales_new
+msgid "In Process"
+msgstr "En Proceso"
