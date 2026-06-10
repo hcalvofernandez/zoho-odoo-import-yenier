@@ -17,7 +17,6 @@
 
 - Stock visible en cotizacion.
 - Regla base de disponibilidad para equipo comercial.
-- Preparacion de arquitectura para futura vista por almacen.
 
 ## En pruebas
 
@@ -38,3 +37,4 @@
 - Documentacion funcional del modulo en `manifest`.
 - Backlog del proyecto en `docs/project_backlog.md`.
 - Estructura documental de trabajo en `docs/`.
+- listo arquitectura para futura vista por almacen.
