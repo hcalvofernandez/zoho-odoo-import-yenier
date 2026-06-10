@@ -23,6 +23,7 @@
 
 - Flujo completo factura -> pago -> produccion -> despacho -> entrega.
 - Reportes impresos con firmas y orden de despacho en factura.
+- agragar las funciones necesarias para las fotos de los clientes en este proceso.
 
 ## Listo
 
