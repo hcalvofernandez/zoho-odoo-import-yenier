@@ -53,6 +53,9 @@ Actualmente el modulo cubre este flujo base:
 - Traducciones base al español latino.
 - Stock visible en cotizacion.
 - Bonificaciones por cliente y por grupo con prioridad base.
+- Ajuste de impresion de impuestos en factura.
+- Ordenes de recogida en almacen con lista, estados y reporte.
+- Foto visible y editable en ficha del cliente.
 - Historial de desarrollo versionado en `README.md`.
 
 ## Pendientes provenientes de reunion con cliente
@@ -123,6 +126,16 @@ Posibles tareas:
 Prioridad:
 Media
 
+Estado actual:
+Implementado parcialmente.
+Ya existe:
+- factura impresa sin impuestos por item
+- total fiscal agrupado como `Total de impuestos`
+
+Pendiente futuro:
+- ocultar otras partidas solo al imprimir si el cliente lo solicita
+- extender el mismo criterio a otros reportes si hace falta
+
 ### 4. Reglas mas estrictas para despacho
 
 Objetivo:
@@ -149,6 +162,12 @@ Posibles tareas:
 
 Prioridad:
 Media
+
+Estado actual:
+Implementado.
+Ya existe:
+- uso de `image_1920` en la ficha del cliente
+- foto visible y editable en `res.partner`
 
 ### 6. Produccion avanzada
 
@@ -190,6 +209,16 @@ Posibles tareas:
 Prioridad:
 Alta
 
+Estado actual:
+Implementado en su version base.
+Ya existe:
+- modelo propio de orden de recogida
+- creacion desde factura
+- lista con estados
+- visibilidad desde ventas e inventario
+- reporte imprimible y reimprimible
+- cambio manual a entregada por almacen
+
 ## Pendientes de definicion
 
 Estos puntos necesitan decision funcional antes de implementarse:
@@ -198,12 +227,28 @@ Estos puntos necesitan decision funcional antes de implementarse:
 - como se define el grupo de bonificacion
 - que regla exacta debe usarse para stock por almacen
 - que significa "ver solo lo que tenga fecha mas proxima" en entregas
-- que condicion exacta convierte una linea en "lista para recoger"
 - a que se refiere exactamente "linea de produccion" en producto:
   - BoM
   - centro de trabajo
   - ruta
   - linea interna del negocio
+
+## Regla base ya definida para recogida
+
+Para esta fase se toma como regla operativa inicial:
+
+- una linea puede entrar en orden de recogida si:
+  - tiene producto
+  - tiene picking asociado
+  - el picking no esta cancelado
+  - existe cantidad liberada no entregada
+
+- una orden queda `ready` para recoger si:
+  - el picking esta en estado `assigned` o `done`
+
+- una orden queda `pending` si:
+  - existe la linea autorizable
+  - pero el picking aun no esta en condicion operativa de entrega
 
 ## Orden recomendado de trabajo
 
@@ -242,14 +287,13 @@ Estos puntos necesitan decision funcional antes de implementarse:
 
 ## Siguiente paso recomendado
 
-Iniciar la `Fase E`, enfocada en ordenes de recogida en almacen, porque ya existe base funcional suficiente en factura, fulfillment y pickings para convertirla en una pieza operativa real.
+Esperar la prueba operativa con el cliente y usar ese resultado para priorizar el siguiente ajuste real del flujo.
 
 ## Ejecucion actual
 
-La fase activa del proyecto pasa a ser:
+La fase activa del proyecto queda en:
 
-- Fase E
-  - orden de recogida desde factura
-  - lista operativa con estados
-  - visibilidad desde ventas e inventario
-  - reporte para cliente y reimpresion posterior
+- validacion operativa con cliente
+  - flujo de facturacion
+  - recogida en almacen
+  - ajustes finos sobre reportes y operacion

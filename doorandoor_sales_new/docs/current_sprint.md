@@ -2,7 +2,7 @@
 
 ## Objetivo del sprint
 
-Iniciar la Fase E del backlog con foco en recogida operativa en almacen:
+Cerrar la Fase E del backlog con foco en recogida operativa en almacen:
 
 - crear ordenes de recogida desde facturacion
 - registrar su seguimiento en lista con estados
@@ -22,7 +22,7 @@ Iniciar la Fase E del backlog con foco en recogida operativa en almacen:
   Ventas puede emitir una orden de recogida y localizarla despues.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ### Tarea 2
 
@@ -36,7 +36,7 @@ Iniciar la Fase E del backlog con foco en recogida operativa en almacen:
   Estados propuestos: nueva, pendiente, lista, entregada, cancelada.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ### Tarea 3
 
@@ -47,11 +47,10 @@ Iniciar la Fase E del backlog con foco en recogida operativa en almacen:
   Exponer las ordenes desde facturacion e inventario con enfoque distinto por estado.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ## Fuera de alcance de este sprint
 
-- foto de cliente
 - proyeccion de produccion
 - reglas avanzadas de bonificacion por categoria de producto
 - refinamientos adicionales de impresion que no afecten recogida
@@ -71,4 +70,11 @@ Este sprint se considera listo cuando:
 
 - Las fases A y B quedan cerradas y validadas.
 - La Fase C ya tiene el ajuste inicial de impuestos en factura impresa.
-- El siguiente frente activo pasa a ser recogida en almacen como flujo operativo independiente.
+- La Fase E queda implementada y validada.
+- La regla base de `listo para recoger` queda cerrada:
+  - linea con cantidad liberada no entregada
+  - con picking asociado no cancelado
+  - orden `ready` si el picking esta `assigned` o `done`
+- Las ordenes de recogida ya se generan desde factura, se listan por estado y pueden marcarse como entregadas.
+- La lista queda visible desde ventas e inventario.
+- La ficha del cliente ya muestra foto editable en `res.partner`.

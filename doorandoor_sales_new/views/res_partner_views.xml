@@ -7,6 +7,14 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority">100</field>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group string="Customer Photo">
+                        <group>
+                            <field name="image_1920" widget="image" class="oe_avatar"
+                                   options="{'preview_image': 'avatar_128', 'zoom': true}"/>
+                        </group>
+                    </group>
+                </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page string="Commercial Rules">
                         <group string="DoorAndDoor Commercial Bonus">

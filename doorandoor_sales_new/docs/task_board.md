@@ -3,7 +3,6 @@
 ## Pendiente
 
 - Revisar reglas de despacho por almacen y por pago.
-- Agregar foto en ficha de cliente.
 - Diseñar proyeccion de produccion.
 
 ## En analisis
@@ -11,13 +10,10 @@
 - Reglas avanzadas de bonificacion por categoria de producto.
 - Regla exacta para ocultar partidas solo en impresion.
 - Definicion de linea o sistema de produccion en producto.
-- Regla exacta para considerar una linea lista para recoger.
 
 ## En desarrollo
 
-- Orden de recogida en almacen desde factura.
-- Lista operativa con estados para recogida.
-- Visibilidad de la lista desde inventarios.
+- Ajustes adicionales que salgan de la prueba real con el cliente.
 
 ## En pruebas
 
@@ -46,3 +42,9 @@
 - Prioridad base de bonificacion contra descuento manual.
 - Validacion automatica de Fase B en entorno Odoo.
 - Factura impresa sin columna de impuestos por item y con total fiscal agrupado.
+- Foto visible y editable en ficha del cliente.
+- Orden de recogida en almacen desde factura.
+- Lista operativa con estados para recogida.
+- Visibilidad de la lista desde inventarios.
+- Reporte imprimible y reimprimible de orden de recogida.
+- Regla base de linea lista para recoger.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "DoorAndDoor Sales New",
-    "version": "18.0.1.0.26",
+    "version": "18.0.1.0.29",
     "category": "Sales",
     "summary": "Invoice-driven sales, payment release, delivery and production orchestration",
     "description": """
@@ -96,9 +96,11 @@ Hanoi Calvo Fernández (doorandoor)
         "doorandoor_delivery_status",
     ],
     "data": [
+        "data/pickup_order_sequence.xml",
         "security/ir.model.access.csv",
         "views/fulfillment_line_views.xml",
         "views/payment_release_log_views.xml",
+        "views/pickup_order_views.xml",
         "views/account_move_views.xml",
         "views/sale_order_views.xml",
         "views/res_partner_views.xml",
@@ -106,6 +108,7 @@ Hanoi Calvo Fernández (doorandoor)
         "views/res_config_settings_views.xml",
         "views/menu_views.xml",
         "views/report_signature_templates.xml",
+        "views/pickup_order_report.xml",
     ],
     "installable": True,
     "application": False,

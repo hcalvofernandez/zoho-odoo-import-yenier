@@ -20,5 +20,19 @@
             parent="menu_doorandoor_sales_new_root"
             action="action_doorandoor_payment_release_log"
             sequence="20"/>
+
+        <menuitem
+            id="menu_doorandoor_pickup_order"
+            name="Pickup Orders"
+            parent="menu_doorandoor_sales_new_root"
+            action="action_doorandoor_pickup_order"
+            sequence="30"/>
+
+        <menuitem
+            id="menu_doorandoor_pickup_order_inventory"
+            name="Delivered Pickup Orders"
+            parent="stock.menu_stock_root"
+            action="action_doorandoor_pickup_order_inventory"
+            sequence="95"/>
     </data>
 </odoo>

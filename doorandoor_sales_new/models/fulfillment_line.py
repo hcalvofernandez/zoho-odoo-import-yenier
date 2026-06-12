@@ -60,6 +60,12 @@ class DoorandoorFulfillmentLine(models.Model):
     qty_pending_delivery = fields.Float(string="Qty Pending Delivery", default=0.0)
     amount_total = fields.Monetary(string="Line Amount", currency_field="currency_id", readonly=True)
     amount_released = fields.Monetary(string="Released Amount", currency_field="currency_id", default=0.0)
+    pickup_order_line_ids = fields.One2many(
+        "doorandoor.pickup.order.line",
+        "fulfillment_line_id",
+        string="Pickup Order Lines",
+        copy=False,
+    )
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
@@ -79,3 +85,7 @@ class DoorandoorFulfillmentLine(models.Model):
         default="pending_payment",
         required=True,
     )
+
+    def _ddsn_get_qty_ready_for_pickup(self):
+        self.ensure_one()
+        return max(self.qty_released - self.qty_delivered, 0.0)

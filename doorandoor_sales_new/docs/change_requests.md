@@ -109,4 +109,4 @@
   Requiere un modelo nuevo con lineas, estados, vistas de lista, accion desde factura, reporte imprimible y visibilidad segmentada entre ventas e inventario.
 
 - Estado:
-  Aprobado para siguiente sprint
+  Implementado y validado en entorno

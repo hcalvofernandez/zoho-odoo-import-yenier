@@ -57,6 +57,16 @@ class AccountMove(models.Model):
         string="Production Count",
         compute="_compute_fulfillment_counts",
     )
+    pickup_order_ids = fields.One2many(
+        "doorandoor.pickup.order",
+        "move_id",
+        string="Pickup Orders",
+        copy=False,
+    )
+    pickup_order_count = fields.Integer(
+        string="Pickup Order Count",
+        compute="_compute_fulfillment_counts",
+    )
 
     payment_release_policy = fields.Selection(
         selection=[
@@ -142,6 +152,7 @@ class AccountMove(models.Model):
             move.picking_count = len(fulfillment_lines.mapped("picking_id"))
             move.mrp_production_count = len(fulfillment_lines.mapped("mrp_production_id"))
             move.payment_release_log_count = len(move.payment_release_log_ids)
+            move.pickup_order_count = len(move.pickup_order_ids)
 
     def action_view_generated_sale_order(self):
         self.ensure_one()
@@ -186,6 +197,25 @@ class AccountMove(models.Model):
         else:
             action["domain"] = [("id", "in", productions.ids)]
         return action
+
+    def action_view_pickup_orders(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "doorandoor_sales_new.action_doorandoor_pickup_order"
+        )
+        pickup_orders = self.pickup_order_ids
+        if len(pickup_orders) == 1:
+            action["res_id"] = pickup_orders.id
+            action["views"] = [(False, "form")]
+            action["view_mode"] = "form"
+        else:
+            action["domain"] = [("id", "in", pickup_orders.ids)]
+        action["context"] = {"default_move_id": self.id}
+        return action
+
+    def action_create_pickup_orders(self):
+        self._ddsn_ensure_pickup_orders()
+        return self.action_view_pickup_orders()
 
     def action_sync_fulfillment(self):
         self._ddsn_create_sale_orders_and_fulfillment()
@@ -263,6 +293,74 @@ class AccountMove(models.Model):
             "discount": invoice_line.discount,
             "tax_id": [(6, 0, invoice_line.tax_ids.ids)],
         }
+
+    def _ddsn_get_pickup_candidate_lines(self):
+        self.ensure_one()
+        return self.fulfillment_line_ids.filtered(
+            lambda line: line.product_id
+            and line.picking_id
+            and line.picking_id.state != "cancel"
+            and line._ddsn_get_qty_ready_for_pickup() > 0.0
+        )
+
+    def _ddsn_prepare_pickup_order_vals(self, picking, warehouse):
+        self.ensure_one()
+        state = "ready" if picking.state in ("assigned", "done") else "pending"
+        return {
+            "move_id": self.id,
+            "picking_id": picking.id,
+            "warehouse_id": warehouse.id if warehouse else False,
+            "state": state,
+        }
+
+    def _ddsn_prepare_pickup_order_line_vals(self, order, fulfillment_line):
+        self.ensure_one()
+        qty = fulfillment_line._ddsn_get_qty_ready_for_pickup()
+        unit_amount = 0.0
+        if fulfillment_line.qty_invoiced:
+            unit_amount = fulfillment_line.amount_total / fulfillment_line.qty_invoiced
+        return {
+            "pickup_order_id": order.id,
+            "fulfillment_line_id": fulfillment_line.id,
+            "product_uom_qty": qty,
+            "qty_delivered": 0.0,
+            "amount_total": unit_amount * qty,
+        }
+
+    def _ddsn_ensure_pickup_orders(self):
+        pickup_order_model = self.env["doorandoor.pickup.order"]
+        pickup_line_model = self.env["doorandoor.pickup.order.line"]
+        for move in self:
+            candidates = move._ddsn_get_pickup_candidate_lines()
+            grouped_lines = {}
+            for line in candidates:
+                picking = line.picking_id
+                warehouse = picking.picking_type_id.warehouse_id
+                key = (picking.id, warehouse.id if warehouse else False)
+                grouped_lines.setdefault(key, self.env["doorandoor.fulfillment.line"])
+                grouped_lines[key] |= line
+
+            for (picking_id, warehouse_id), lines in grouped_lines.items():
+                existing_order = move.pickup_order_ids.filtered(
+                    lambda order: order.picking_id.id == picking_id and order.state not in ("delivered", "cancelled")
+                )[:1]
+                if existing_order:
+                    existing_fulfillment_ids = existing_order.pickup_line_ids.mapped("fulfillment_line_id").ids
+                    missing_lines = lines.filtered(lambda line: line.id not in existing_fulfillment_ids)
+                    for fulfillment_line in missing_lines:
+                        pickup_line_model.create(
+                            move._ddsn_prepare_pickup_order_line_vals(existing_order, fulfillment_line)
+                        )
+                    existing_order._ddsn_sync_state_from_operation()
+                    continue
+
+                picking = self.env["stock.picking"].browse(picking_id)
+                warehouse = self.env["stock.warehouse"].browse(warehouse_id) if warehouse_id else False
+                order = pickup_order_model.create(move._ddsn_prepare_pickup_order_vals(picking, warehouse))
+                for fulfillment_line in lines:
+                    pickup_line_model.create(move._ddsn_prepare_pickup_order_line_vals(order, fulfillment_line))
+                order._ddsn_sync_state_from_operation()
+        return True
 
     def _ddsn_create_fulfillment_lines(self, sale_order, product_lines):
         self.ensure_one()

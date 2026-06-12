@@ -58,6 +58,22 @@
                         invisible="move_type not in ('out_invoice', 'out_refund')">
                         <field name="payment_release_log_count" string="Releases" widget="statinfo"/>
                     </button>
+                    <button
+                        name="action_view_pickup_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-archive"
+                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="pickup_order_count" string="Pickup Orders" widget="statinfo"/>
+                    </button>
+                </xpath>
+
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="action_create_pickup_orders"
+                        type="object"
+                        string="Create Pickup Order"
+                        invisible="move_type not in ('out_invoice', 'out_refund')"/>
                 </xpath>
 
                 <xpath expr="//notebook" position="inside">
@@ -94,6 +110,18 @@
                                 <field name="policy_used"/>
                                 <field name="notes"/>
                                 <field name="write_date"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Pickup Orders" invisible="move_type not in ('out_invoice', 'out_refund')">
+                        <field name="pickup_order_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="warehouse_id"/>
+                                <field name="picking_id"/>
+                                <field name="amount_total"/>
+                                <field name="state"/>
+                                <field name="delivered_date"/>
                             </list>
                         </field>
                     </page>

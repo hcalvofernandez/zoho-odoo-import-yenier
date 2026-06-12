@@ -30,6 +30,16 @@ El modulo esta pensado para cubrir estas etapas:
    - trazabilidad por factura, pedido, picking y produccion
    - futura integracion con etiquetas Zebra y QR
 
+4. Soporte comercial
+   - stock visible en cotizacion
+   - bonificaciones por cliente y por grupo
+   - soporte visual en ficha de cliente
+
+5. Soporte operativo
+   - ordenes de recogida en almacen
+   - impresion para cliente desde facturacion
+   - seguimiento posterior desde ventas e inventario
+
 ## Relacion con otros modulos
 
 Actualmente este modulo depende de `doorandoor_delivery_status`.
@@ -47,11 +57,98 @@ La intencion por ahora no es reemplazarlo de inmediato, sino reutilizar sus util
 - `models/fulfillment_line.py`
   Modelo central para rastrear cantidades facturadas, liberadas, entregadas y pendientes.
 
+- `models/pickup_order.py`
+  Controla las ordenes de recogida, sus estados y sus lineas operativas.
+
 - `models/res_config_settings.py`
   Parametros funcionales seleccionables del flujo.
 
+- `models/res_partner.py`
+  Reglas comerciales simples por cliente y soporte visual sobre ficha.
+
 - `views/account_move_views.xml`
   Agrega smart buttons, configuracion y pestaña de cumplimiento en factura.
+
+- `views/pickup_order_views.xml`
+  Agrega vistas de lista y formulario para ordenes de recogida.
+
+- `views/pickup_order_report.xml`
+  Define el reporte imprimible de orden de recogida.
+
+## Estado funcional actual
+
+Al cierre actual del proyecto, el modulo ya cubre:
+
+- factura publicada genera `sale.order` y lineas de cumplimiento
+- pago libera cantidades segun politica
+- liberacion dispara documentos de stock o fabricacion
+- produccion terminada puede completar despacho de salida
+- validacion de picking actualiza entrega
+- cotizacion muestra stock disponible y detalle por almacen
+- cotizacion aplica bonificacion por cliente o grupo con prioridad base
+- factura impresa oculta impuestos por item y concentra `Total de impuestos`
+- ficha de cliente permite trabajar foto y reglas comerciales
+- ordenes de recogida pueden emitirse desde factura y quedar trazadas en listas
+
+## Regla operativa actual para recogida
+
+Una linea entra en orden de recogida si:
+
+- tiene producto
+- tiene picking asociado
+- el picking no esta cancelado
+- existe cantidad liberada no entregada
+
+Una orden de recogida queda:
+
+- `ready` si el picking esta en `assigned` o `done`
+- `pending` si la linea es autorizable pero el picking aun no esta listo operativamente
+- `delivered` cuando almacen la marca como entregada
+
+## Puntos de uso recomendados
+
+### Desde facturacion
+
+- publicar factura
+- aplicar flujo de liberacion
+- revisar fulfillment y despacho
+- crear `Pickup Order`
+- imprimir la orden para el cliente
+
+### Desde ventas
+
+- consultar lista de ordenes de recogida
+- revisar estados `new`, `pending`, `ready`
+- reimprimir el documento si hace falta
+
+### Desde inventario
+
+- consultar ordenes de recogida entregadas
+- localizar historico operativo por cliente, factura o almacen
+- confirmar ordenes ya completadas
+
+## Pruebas y validacion
+
+El modulo cuenta con pruebas automaticas para validar:
+
+- creacion de `sale.order` desde factura
+- creacion y no duplicacion de lineas de cumplimiento
+- liberacion por pago prorrateada y secuencial
+- creacion de picking por stock
+- creacion de orden de fabricacion
+- enlace produccion -> despacho
+- stock visible en cotizacion
+- bonificacion por cliente y por grupo
+- creacion de orden de recogida
+- cambio de estado a entregada en orden de recogida
+
+Base usada para verificacion reciente:
+
+- `pruebas`
+
+Resultado reciente validado:
+
+- suite en verde sin errores en la ultima actualizacion operativa del modulo
 
 ## Historial de desarrollo
 
@@ -225,6 +322,24 @@ La intencion por ahora no es reemplazarlo de inmediato, sino reutilizar sus util
 - Se oculta la columna de impuestos por item en el reporte de factura.
 - El resumen inferior muestra solo el acumulado fiscal con la etiqueta `Total de impuestos`.
 - La actualizacion del modulo queda validada en la base `pruebas`.
+
+### 18.0.1.0.28
+
+- Se agrega la base operativa de ordenes de recogida en almacen.
+- Las ordenes se generan desde factura, se listan por estado y pueden marcarse como entregadas.
+- La lista queda visible desde ventas e inventario.
+- Se agrega reporte imprimible de orden de recogida y pruebas automaticas del flujo.
+
+### 18.0.1.0.29
+
+- Se completa el soporte visual en la ficha del cliente usando `image_1920`.
+- La foto del cliente queda visible y editable directamente en el formulario de `res.partner`.
+- La actualizacion del modulo queda validada en la base `pruebas`.
+
+## Observaciones
+
+- El `README` describe el estado funcional real del modulo, aunque algunos tableros de `docs/` pueden representar el siguiente frente de trabajo en lugar del ultimo cierre tecnico.
+- Cuando se agregan modelos Python nuevos en Odoo, puede ser necesario reiniciar el contenedor web ademas de actualizar el modulo para que el registro cargue completamente.
 
 ## Autor
 

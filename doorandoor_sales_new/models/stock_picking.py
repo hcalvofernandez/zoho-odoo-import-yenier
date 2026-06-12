@@ -9,6 +9,7 @@ class StockPicking(models.Model):
         result = super().button_validate()
         done_pickings = pending_pickings.filtered(lambda picking: picking.state == "done")
         done_pickings._ddsn_sync_invoice_delivery_status()
+        self._ddsn_sync_pickup_order_state()
         return result
 
     def _ddsn_sync_invoice_delivery_status(self):
@@ -24,3 +25,6 @@ class StockPicking(models.Model):
                 fulfillment_line.write(values)
                 fulfillment_line.move_id._ddsn_set_release_state()
 
+    def _ddsn_sync_pickup_order_state(self):
+        pickup_orders = self.env["doorandoor.pickup.order"].search([("picking_id", "in", self.ids)])
+        pickup_orders._ddsn_sync_state_from_operation()

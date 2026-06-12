@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_doorandoor_pickup_order_tree" model="ir.ui.view">
+            <field name="name">doorandoor.pickup.order.list</field>
+            <field name="model">doorandoor.pickup.order</field>
+            <field name="arch" type="xml">
+                <list string="Pickup Orders">
+                    <field name="name"/>
+                    <field name="move_id"/>
+                    <field name="partner_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="picking_id"/>
+                    <field name="line_count"/>
+                    <field name="amount_total"/>
+                    <field name="state"/>
+                    <field name="delivered_date" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_doorandoor_pickup_order_form" model="ir.ui.view">
+            <field name="name">doorandoor.pickup.order.form</field>
+            <field name="model">doorandoor.pickup.order</field>
+            <field name="arch" type="xml">
+                <form string="Pickup Order">
+                    <header>
+                        <button name="action_mark_pending" type="object" string="Mark Pending" invisible="state in ('pending', 'delivered', 'cancelled')"/>
+                        <button name="action_mark_ready" type="object" string="Mark Ready" class="btn-primary" invisible="state in ('ready', 'delivered', 'cancelled')"/>
+                        <button name="action_mark_delivered" type="object" string="Mark Delivered" class="btn-primary" invisible="state in ('delivered', 'cancelled')"/>
+                        <button name="action_mark_cancelled" type="object" string="Cancel" invisible="state == 'cancelled'"/>
+                        <button name="action_reset_new" type="object" string="Reset to New" invisible="state == 'new'"/>
+                        <button name="action_print_pickup_order" type="object" string="Print Pickup Order" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,pending,ready,delivered,cancelled"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="move_id" readonly="1"/>
+                                <field name="sale_order_id" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="warehouse_id" readonly="1"/>
+                                <field name="picking_id" readonly="1"/>
+                                <field name="delivered_by_id" readonly="1"/>
+                                <field name="delivered_date" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                        <field name="pickup_line_ids" readonly="1">
+                            <list string="Pickup Lines">
+                                <field name="product_id"/>
+                                <field name="product_uom_qty"/>
+                                <field name="amount_total"/>
+                                <field name="fulfillment_line_id" optional="hide"/>
+                            </list>
+                        </field>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_doorandoor_pickup_order_search" model="ir.ui.view">
+            <field name="name">doorandoor.pickup.order.search</field>
+            <field name="model">doorandoor.pickup.order</field>
+            <field name="arch" type="xml">
+                <search string="Pickup Orders">
+                    <field name="name"/>
+                    <field name="move_id"/>
+                    <field name="partner_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="picking_id"/>
+                    <filter string="New" name="filter_new" domain="[('state', '=', 'new')]"/>
+                    <filter string="Pending" name="filter_pending" domain="[('state', '=', 'pending')]"/>
+                    <filter string="Ready" name="filter_ready" domain="[('state', '=', 'ready')]"/>
+                    <filter string="Delivered" name="filter_delivered" domain="[('state', '=', 'delivered')]"/>
+                    <filter string="Cancelled" name="filter_cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Warehouse" name="group_warehouse" context="{'group_by': 'warehouse_id'}"/>
+                        <filter string="Customer" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_doorandoor_pickup_order" model="ir.actions.act_window">
+            <field name="name">Pickup Orders</field>
+            <field name="res_model">doorandoor.pickup.order</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_doorandoor_pickup_order_search"/>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="action_doorandoor_pickup_order_inventory" model="ir.actions.act_window">
+            <field name="name">Delivered Pickup Orders</field>
+            <field name="res_model">doorandoor.pickup.order</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_doorandoor_pickup_order_search"/>
+            <field name="domain">[('state', '=', 'delivered')]</field>
+            <field name="context">{'search_default_filter_delivered': 1}</field>
+        </record>
+    </data>
+</odoo>
