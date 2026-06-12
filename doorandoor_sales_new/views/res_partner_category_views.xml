@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_category_form_inherit_ddsn_bonus" model="ir.ui.view">
+            <field name="name">res.partner.category.form.ddsn.bonus</field>
+            <field name="model">res.partner.category</field>
+            <field name="inherit_id" ref="base.res_partner_category_form_view"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="ddsn_bonus_percent"/>
+                    <field name="ddsn_bonus_notes" placeholder="Commercial agreements for this customer group..."/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit_ddsn_bonus" model="ir.ui.view">
+            <field name="name">res.partner.form.ddsn.bonus</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Commercial Rules">
+                        <group string="DoorAndDoor Commercial Bonus">
+                            <group>
+                                <field name="ddsn_bonus_percent"/>
+                            </group>
+                            <group>
+                                <field name="ddsn_bonus_notes" placeholder="Commercial agreements, exceptions or internal notes..."/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

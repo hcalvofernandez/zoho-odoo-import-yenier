@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "DoorAndDoor Sales New",
-    "version": "18.0.1.0.23",
+    "version": "18.0.1.0.26",
     "category": "Sales",
     "summary": "Invoice-driven sales, payment release, delivery and production orchestration",
     "description": """
@@ -101,6 +101,8 @@ Hanoi Calvo Fernández (doorandoor)
         "views/payment_release_log_views.xml",
         "views/account_move_views.xml",
         "views/sale_order_views.xml",
+        "views/res_partner_views.xml",
+        "views/res_partner_category_views.xml",
         "views/res_config_settings_views.xml",
         "views/menu_views.xml",
         "views/report_signature_templates.xml",

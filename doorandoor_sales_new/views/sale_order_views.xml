@@ -10,6 +10,8 @@
                 <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
                     <field name="ddsn_stock_display" string="Stock" optional="show" readonly="1"/>
                     <field name="ddsn_warehouse_stock_html" string="Warehouses" widget="html" optional="show" readonly="1"/>
+                    <field name="ddsn_bonus_percent" string="Bonus %" optional="show" readonly="1"/>
+                    <field name="ddsn_bonus_source" string="Bonus Source" optional="hide" readonly="1"/>
                 </xpath>
             </field>
         </record>

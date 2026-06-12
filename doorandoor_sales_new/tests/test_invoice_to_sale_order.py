@@ -1,10 +1,9 @@
 from odoo import fields
-from odoo.tests import tagged
-from odoo.tests.common import SavepointCase
+from odoo.tests import TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestInvoiceToSaleOrder(SavepointCase):
+class TestInvoiceToSaleOrder(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -30,7 +29,8 @@ class TestInvoiceToSaleOrder(SavepointCase):
         cls.manufactured_product = cls.env["product.product"].create(
             {
                 "name": "Producto Fabricado DDSN",
-                "type": "product",
+                "type": "consu",
+                "is_storable": True,
                 "list_price": 300.0,
             }
         )

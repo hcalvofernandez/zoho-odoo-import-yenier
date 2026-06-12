@@ -286,6 +286,30 @@ msgid "Warehouses"
 msgstr "Almacenes"
 
 #. module: doorandoor_sales_new
+msgid "Customer Bonus %"
+msgstr "Bonificación del cliente %"
+
+#. module: doorandoor_sales_new
+msgid "Bonus Notes"
+msgstr "Notas de bonificación"
+
+#. module: doorandoor_sales_new
+msgid "Applied Bonus %"
+msgstr "Bonificación aplicada %"
+
+#. module: doorandoor_sales_new
+msgid "Bonus %"
+msgstr "Bonificación %"
+
+#. module: doorandoor_sales_new
+msgid "Commercial Rules"
+msgstr "Reglas comerciales"
+
+#. module: doorandoor_sales_new
+msgid "DoorAndDoor Commercial Bonus"
+msgstr "Bonificación comercial DoorAndDoor"
+
+#. module: doorandoor_sales_new
 msgid "Production Count"
 msgstr "Cantidad de Producciones"
 

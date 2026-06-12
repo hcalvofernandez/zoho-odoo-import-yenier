@@ -10,7 +10,7 @@
 - Dudas:
 - Acciones:
 
-## Reunion base de analisis con cliente
+## Reunion base de analisis con cliente 9-06-26 
 
 - Tema:
   Revision del flujo comercial, impresion, stock, bonificaciones y produccion.

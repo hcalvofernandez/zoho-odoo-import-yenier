@@ -2,66 +2,73 @@
 
 ## Objetivo del sprint
 
-Iniciar la Fase A del backlog con foco en ventas:
+Iniciar la Fase B del backlog con foco en reglas comerciales:
 
-- mostrar stock al momento de cotizar
-- definir la primera regla funcional de disponibilidad
-- dejar la base lista para futuras decisiones por almacen
+- bonificaciones por cliente y por grupo
+- aplicacion automatica en cotizacion
+- prioridad clara entre regla comercial y descuento manual
 
 ## Alcance inmediato
 
 ### Tarea 1
 
 - Nombre:
-  Stock visible en cotizacion
+  Bonificacion por grupo de cliente
 
 - Objetivo:
-  Mostrar disponibilidad del producto en la linea de cotizacion.
+  Permitir una bonificacion comercial base definida en categorias de cliente.
 
 - Resultado esperado:
-  El equipo comercial puede ver stock sin esperar a la factura.
+  La cotizacion puede heredar una bonificacion desde el grupo comercial cuando el cliente no tenga una propia.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ### Tarea 2
 
 - Nombre:
-  Regla base de disponibilidad
+  Prioridad de bonificacion automatica
 
 - Objetivo:
-  Implementar una primera version simple y estable de disponibilidad.
+  Aplicar una regla simple y predecible al cargar productos en cotizacion.
 
 - Propuesta inicial:
-  Mostrar stock disponible general del producto en la compañia activa.
+  Prioridad: descuento manual > bonificacion del cliente > bonificacion del grupo.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ### Tarea 3
 
 - Nombre:
-  Preparacion para stock por almacen
+  Trazabilidad de origen de bonificacion
 
 - Objetivo:
-  Dejar la arquitectura lista para evolucionar despues a stock por almacen.
+  Mostrar de donde sale la bonificacion aplicada en la linea comercial.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ## Fuera de alcance de este sprint
 
-- bonificaciones por cliente
 - ajustes fiscales de impresion
 - foto de cliente
 - proyeccion de produccion
+- reglas avanzadas por categoria de producto
 
 ## Criterio de cierre
 
 Este sprint se considera listo cuando:
 
-- la cotizacion muestre stock visible por linea
-- el dato se actualice de forma consistente
-- la vista quede usable para el equipo comercial
-- el cambio quede documentado en backlog y README
+- la cotizacion aplique bonificacion automatica sin sobreescribir descuento manual
+- exista bonificacion por cliente y por grupo
+- la linea muestre el origen de la bonificacion aplicada
+- el cambio quede documentado y validado en el entorno Odoo
 
+## Resultado actual
+
+- Ya existia la bonificacion por cliente en cotizacion.
+- Se agrega bonificacion por grupo de cliente en `res.partner.category`.
+- La prioridad queda asi: descuento manual, luego bonificacion del cliente, luego bonificacion del grupo.
+- La linea comercial guarda el origen de la bonificacion aplicada.
+- La validacion automatica queda pendiente de reactivar contenedores Docker despues del reinicio del entorno.

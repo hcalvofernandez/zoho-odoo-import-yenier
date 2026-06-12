@@ -30,6 +30,23 @@ class SaleOrderLine(models.Model):
         readonly=True,
     )
 
+    ddsn_bonus_percent = fields.Float(
+        string="Applied Bonus %",
+        readonly=True,
+        copy=False,
+    )
+
+    ddsn_bonus_source = fields.Selection(
+        [
+            ("partner", "Customer"),
+            ("group", "Group"),
+            ("manual", "Manual"),
+        ],
+        string="Bonus Source",
+        readonly=True,
+        copy=False,
+    )
+
     @api.depends("product_id", "product_uom_qty", "order_id.warehouse_id", "order_id.company_id")
     def _compute_ddsn_stock_visibility(self):
         for line in self:
@@ -109,3 +126,35 @@ class SaleOrderLine(models.Model):
             )
 
         return "".join(badges) or False
+
+    @api.onchange("product_id")
+    def _onchange_ddsn_apply_partner_bonus(self):
+        for line in self:
+            if not line.product_id or line.display_type:
+                continue
+            if line.discount:
+                line.ddsn_bonus_percent = line.discount
+                line.ddsn_bonus_source = "manual"
+                continue
+
+            partner = line.order_id.partner_id.commercial_partner_id or line.order_id.partner_id
+            partner_bonus = partner.ddsn_bonus_percent
+            group_bonus = partner._ddsn_get_group_bonus_percent()
+
+            if partner_bonus:
+                line.discount = partner_bonus
+                line.ddsn_bonus_percent = partner_bonus
+                line.ddsn_bonus_source = "partner"
+            elif group_bonus:
+                line.discount = group_bonus
+                line.ddsn_bonus_percent = group_bonus
+                line.ddsn_bonus_source = "group"
+
+    @api.onchange("discount")
+    def _onchange_ddsn_sync_bonus_percent(self):
+        for line in self:
+            line.ddsn_bonus_percent = line.discount or 0.0
+            if not line.discount:
+                line.ddsn_bonus_source = False
+            elif line.ddsn_bonus_source not in ("partner", "group"):
+                line.ddsn_bonus_source = "manual"

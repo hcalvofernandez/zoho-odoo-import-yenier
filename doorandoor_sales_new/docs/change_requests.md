@@ -49,4 +49,44 @@
   Requiere extender vistas y logica de `sale.order.line` con informacion de disponibilidad.
 
 - Estado:
+  Implementado
+
+## CR-0003
+
+- Fecha:
+  2026-06-10
+
+- Solicitado por:
+  Equipo del proyecto DoorAndDoor
+
+- Descripcion:
+  Iniciar la base de bonificaciones automaticas por cliente en cotizacion.
+
+- Impacto funcional:
+  Permite precargar descuentos comerciales simples desde la ficha del cliente.
+
+- Impacto tecnico:
+  Requiere extender `res.partner`, `sale.order.line` y la vista del cliente.
+
+- Estado:
   En desarrollo
+
+## CR-0004
+
+- Fecha:
+  2026-06-11
+
+- Solicitado por:
+  Equipo del proyecto DoorAndDoor
+
+- Descripcion:
+  Extender la bonificacion comercial para soportar grupos de cliente y definir prioridad frente al descuento manual.
+
+- Impacto funcional:
+  La cotizacion puede aplicar descuentos comerciales mas consistentes sin perder control manual del vendedor.
+
+- Impacto tecnico:
+  Requiere extender `res.partner.category`, `sale.order.line` y vistas de clientes/cotizacion.
+
+- Estado:
+  Implementado pendiente de validacion en entorno

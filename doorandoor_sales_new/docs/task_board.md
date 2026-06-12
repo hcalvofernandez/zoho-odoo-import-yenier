@@ -2,7 +2,6 @@
 
 ## Pendiente
 
-- Definir e implementar bonificaciones por cliente y por grupo.
 - Ajustar impresion de impuestos y partidas segun notas del cliente.
 - Revisar reglas de despacho por almacen y por pago.
 - Agregar foto en ficha de cliente.
@@ -11,18 +10,19 @@
 ## En analisis
 
 - Regla exacta de bonificacion por grupos.
+- Reglas avanzadas de bonificacion por categoria de producto.
 - Definicion de linea o sistema de produccion en producto.
 
 ## En desarrollo
 
-- Stock visible en cotizacion.
-- Regla base de disponibilidad para equipo comercial.
+- Validacion operativa de bonificaciones por cliente y grupo en entorno Docker.
 
 ## En pruebas
 
 - Flujo completo factura -> pago -> produccion -> despacho -> entrega.
 - Reportes impresos con firmas y orden de despacho en factura.
-- agragar las funciones necesarias para las fotos de los clientes en este proceso.
+- Validacion operativa de stock visible y lectura por almacenes en cotizacion.
+- Bonificaciones por grupo y prioridad contra descuento manual.
 
 ## Listo
 
@@ -37,4 +37,8 @@
 - Documentacion funcional del modulo en `manifest`.
 - Backlog del proyecto en `docs/project_backlog.md`.
 - Estructura documental de trabajo en `docs/`.
-- listo arquitectura para futura vista por almacen.
+- Stock visible en cotizacion.
+- Regla base de disponibilidad para equipo comercial.
+- Arquitectura lista para futura vista por almacen.
+- Bonificacion automatica por cliente en cotizacion.
+- Base de bonificacion por grupo de cliente.

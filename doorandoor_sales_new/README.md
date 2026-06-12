@@ -200,6 +200,12 @@ La intencion por ahora no es reemplazarlo de inmediato, sino reutilizar sus util
 
 - Se corrige un error de indentacion en `models/sale_order_line.py` que impedía cargar el modulo y provocaba la caida de la instancia.
 
+### 18.0.1.0.24
+
+- Inicia la base de bonificaciones por cliente.
+- Se agrega porcentaje general de bonificacion en la ficha del cliente.
+- La cotizacion aplica automaticamente esa bonificacion al agregar productos cuando la linea no trae descuento previo.
+
 ## Autor
 
 Hanoi Calvo Fernández (doorandoor)
