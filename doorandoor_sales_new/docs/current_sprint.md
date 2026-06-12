@@ -22,7 +22,7 @@ Iniciar la Fase C del backlog con foco en impresion comercial:
   La factura impresa presenta impuestos con formato claro y consistente.
 
 - Estado:
-  Pendiente
+  Implementada
 
 ### Tarea 2
 
@@ -70,3 +70,4 @@ Este sprint se considera listo cuando:
 - Ya existen bonificaciones por cliente y por grupo con prioridad base en cotizacion.
 - La validacion automatica en la base `pruebas` quedo en verde.
 - El siguiente frente activo pasa a ser impresion y ajustes fiscales visuales.
+- La factura impresa ya no muestra impuestos por linea y concentra ese importe en `Total de impuestos`.

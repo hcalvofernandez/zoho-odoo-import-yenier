@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <template id="report_invoice_document_hide_line_taxes" inherit_id="account.report_invoice_document">
+            <xpath expr="//th[@name='th_taxes']" position="replace"/>
+            <xpath expr="//td[@name='td_taxes']" position="replace"/>
+            <xpath expr="//t[@t-if='o.tax_totals' and @t-call='account.document_tax_totals']" position="replace">
+                <t t-if="o.tax_totals" t-call="doorandoor_sales_new.document_tax_totals_invoice_only">
+                    <t t-set="tax_totals" t-value="o.tax_totals"/>
+                    <t t-set="currency" t-value="o.currency_id"/>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="document_tax_totals_invoice_only">
+            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                <tr class="o_subtotal">
+                    <td>
+                        <span t-out="subtotal['name']">Untaxed Amount</span>
+                    </td>
+                    <td class="text-end">
+                        <span t-att-class="oe_subtotal_footer_separator"
+                              t-out="subtotal['base_amount_currency']"
+                              t-options='{"widget": "monetary", "display_currency": currency}'
+                        >27.00</span>
+                    </td>
+                </tr>
+            </t>
+
+            <tr t-if="tax_totals.get('total_amount_currency') != tax_totals.get('base_amount_currency')" class="o_taxes">
+                <td>Total de impuestos</td>
+                <td class="text-end o_price_total">
+                    <span class="text-nowrap"
+                          t-out="tax_totals['total_amount_currency'] - tax_totals['base_amount_currency']"
+                          t-options='{"widget": "monetary", "display_currency": currency}'
+                    >0.00</span>
+                </td>
+            </tr>
+
+            <tr t-if="'cash_rounding_base_amount_currency' in tax_totals">
+                <td>Rounding</td>
+                <td class="text-end">
+                    <span t-out="tax_totals['cash_rounding_base_amount_currency']"
+                          t-options='{"widget": "monetary", "display_currency": currency}'
+                    >0</span>
+                </td>
+            </tr>
+
+            <tr class="o_total">
+                <td><strong>Total</strong></td>
+                <td class="text-end">
+                    <strong t-out="tax_totals['total_amount_currency']"
+                            t-options='{"widget": "monetary", "display_currency": currency}'
+                    >31.05</strong>
+                </td>
+            </tr>
+        </template>
+
         <template id="report_invoice_document_signature" inherit_id="account.report_invoice_document">
             <xpath expr="//div[hasclass('page')]" position="inside">
                 <div class="mt-5 pt-4">

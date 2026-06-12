@@ -219,6 +219,13 @@ La intencion por ahora no es reemplazarlo de inmediato, sino reutilizar sus util
 - Se corrige la vista de grupos de cliente para compatibilidad con esta base de Odoo 18.
 - La actualizacion del modulo y el suite automatico quedan validados en la base `pruebas`.
 
+### 18.0.1.0.27
+
+- Inicia la Fase C con un ajuste directo sobre la impresion de facturas.
+- Se oculta la columna de impuestos por item en el reporte de factura.
+- El resumen inferior muestra solo el acumulado fiscal con la etiqueta `Total de impuestos`.
+- La actualizacion del modulo queda validada en la base `pruebas`.
+
 ## Autor
 
 Hanoi Calvo Fernández (doorandoor)

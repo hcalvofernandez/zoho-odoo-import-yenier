@@ -42,3 +42,4 @@
 - Base de bonificacion por grupo de cliente.
 - Prioridad base de bonificacion contra descuento manual.
 - Validacion automatica de Fase B en entorno Odoo.
+- Factura impresa sin columna de impuestos por item y con total fiscal agrupado.
