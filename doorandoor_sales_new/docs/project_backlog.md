@@ -164,6 +164,32 @@ Posibles tareas:
 Prioridad:
 Media
 
+### 7. Orden de recogida en almacen
+
+Objetivo:
+Emitir y controlar un documento operativo de recogida desde facturacion, con seguimiento posterior en ventas e inventario.
+
+Posibles tareas:
+- crear modelo propio de orden de recogida ligado a la factura
+- generar ordenes desde facturacion para productos pagados y listos para recoger
+- mostrar almacen designado para la entrega
+- imprimir el documento para el cliente desde la lista de reportes de factura
+- guardar las ordenes en una vista de lista con estados
+- permitir seguimiento posterior desde ventas
+- hacer visible la misma lista desde inventarios
+- permitir que almacen marque la orden como entregada al cliente
+- separar la vista operativa:
+  - ventas:
+    - nuevas
+    - pendientes
+    - listas
+  - inventario:
+    - entregadas
+- agregar reporte reimprimible desde la orden
+
+Prioridad:
+Alta
+
 ## Pendientes de definicion
 
 Estos puntos necesitan decision funcional antes de implementarse:
@@ -172,6 +198,7 @@ Estos puntos necesitan decision funcional antes de implementarse:
 - como se define el grupo de bonificacion
 - que regla exacta debe usarse para stock por almacen
 - que significa "ver solo lo que tenga fecha mas proxima" en entregas
+- que condicion exacta convierte una linea en "lista para recoger"
 - a que se refiere exactamente "linea de produccion" en producto:
   - BoM
   - centro de trabajo
@@ -200,6 +227,13 @@ Estos puntos necesitan decision funcional antes de implementarse:
 - proyeccion de produccion
 - vinculo producto -> linea o sistema de produccion
 
+### Fase E
+
+- orden de recogida en almacen
+- listado y estados operativos
+- visibilidad en ventas e inventario
+- reporte imprimible y reimprimible
+
 ## Riesgos y consideraciones
 
 - algunas mejoras tocan vistas estandar de venta, factura y stock al mismo tiempo
@@ -208,13 +242,14 @@ Estos puntos necesitan decision funcional antes de implementarse:
 
 ## Siguiente paso recomendado
 
-Iniciar la `Fase C`, enfocada en ajustes de impresion de impuestos y partidas, porque las fases comerciales A y B ya quedaron implementadas y validadas.
+Iniciar la `Fase E`, enfocada en ordenes de recogida en almacen, porque ya existe base funcional suficiente en factura, fulfillment y pickings para convertirla en una pieza operativa real.
 
 ## Ejecucion actual
 
 La fase activa del proyecto pasa a ser:
 
-- Fase C
-  - ajustes de impresion de impuestos
-  - revisiones de partidas visibles en reportes
-  - afinacion de documentos impresos
+- Fase E
+  - orden de recogida desde factura
+  - lista operativa con estados
+  - visibilidad desde ventas e inventario
+  - reporte para cliente y reimpresion posterior

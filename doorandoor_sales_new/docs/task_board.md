@@ -11,10 +11,13 @@
 - Reglas avanzadas de bonificacion por categoria de producto.
 - Regla exacta para ocultar partidas solo en impresion.
 - Definicion de linea o sistema de produccion en producto.
+- Regla exacta para considerar una linea lista para recoger.
 
 ## En desarrollo
 
-- Ajustes de impresion de impuestos y partidas segun notas del cliente.
+- Orden de recogida en almacen desde factura.
+- Lista operativa con estados para recogida.
+- Visibilidad de la lista desde inventarios.
 
 ## En pruebas
 

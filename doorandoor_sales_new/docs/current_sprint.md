@@ -2,38 +2,38 @@
 
 ## Objetivo del sprint
 
-Iniciar la Fase C del backlog con foco en impresion comercial:
+Iniciar la Fase E del backlog con foco en recogida operativa en almacen:
 
-- revisar impuestos en documentos impresos
-- definir visibilidad de partidas en reportes
-- afinar la presentacion final para cliente y operaciones
+- crear ordenes de recogida desde facturacion
+- registrar su seguimiento en lista con estados
+- dar visibilidad a ventas e inventario
 
 ## Alcance inmediato
 
 ### Tarea 1
 
 - Nombre:
-  Revision del total de impuestos
+  Modelo y flujo de orden de recogida
 
 - Objetivo:
-  Confirmar como debe mostrarse el total de impuestos y su agrupacion en reportes.
+  Crear una entidad operativa propia para controlar recogidas posteriores a la factura.
 
 - Resultado esperado:
-  La factura impresa presenta impuestos con formato claro y consistente.
+  Ventas puede emitir una orden de recogida y localizarla despues.
 
 - Estado:
-  Implementada
+  Pendiente
 
 ### Tarea 2
 
 - Nombre:
-  Definicion de partidas visibles al imprimir
+  Lista operativa y estados
 
 - Objetivo:
-  Definir si algunas lineas deben ocultarse solo en salida impresa.
+  Permitir seguimiento de la orden desde vistas de lista.
 
 - Propuesta inicial:
-  La regla exacta sera confirmada con base en las notas del cliente.
+  Estados propuestos: nueva, pendiente, lista, entregada, cancelada.
 
 - Estado:
   Pendiente
@@ -41,10 +41,10 @@ Iniciar la Fase C del backlog con foco en impresion comercial:
 ### Tarea 3
 
 - Nombre:
-  Afinacion visual de documentos impresos
+  Visibilidad y reportes por area
 
 - Objetivo:
-  Aplicar el mismo criterio visual en factura y reportes relacionados si hace falta.
+  Exponer las ordenes desde facturacion e inventario con enfoque distinto por estado.
 
 - Estado:
   Pendiente
@@ -54,20 +54,21 @@ Iniciar la Fase C del backlog con foco en impresion comercial:
 - foto de cliente
 - proyeccion de produccion
 - reglas avanzadas de bonificacion por categoria de producto
+- refinamientos adicionales de impresion que no afecten recogida
 
 ## Criterio de cierre
 
 Este sprint se considera listo cuando:
 
-- el total de impuestos quede claro en impresion
-- se defina el criterio de partidas visibles en reportes
-- la salida impresa quede afinada para uso operativo
+- exista una orden de recogida propia ligada a factura
+- la orden pueda imprimirse para el cliente
+- la orden quede guardada en una lista con estados
+- almacen pueda marcarla como entregada
+- la lista sea visible desde ventas e inventario
 - el cambio quede documentado y validado en el entorno Odoo
 
 ## Resultado actual
 
-- La Fase B queda cerrada y validada.
-- Ya existen bonificaciones por cliente y por grupo con prioridad base en cotizacion.
-- La validacion automatica en la base `pruebas` quedo en verde.
-- El siguiente frente activo pasa a ser impresion y ajustes fiscales visuales.
-- La factura impresa ya no muestra impuestos por linea y concentra ese importe en `Total de impuestos`.
+- Las fases A y B quedan cerradas y validadas.
+- La Fase C ya tiene el ajuste inicial de impuestos en factura impresa.
+- El siguiente frente activo pasa a ser recogida en almacen como flujo operativo independiente.

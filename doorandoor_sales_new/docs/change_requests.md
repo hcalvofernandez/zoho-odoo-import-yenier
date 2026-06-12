@@ -90,3 +90,23 @@
 
 - Estado:
   Implementado y validado en entorno
+
+## CR-0005
+
+- Fecha:
+  2026-06-12
+
+- Solicitado por:
+  Cliente DoorAndDoor
+
+- Descripcion:
+  Crear un documento y flujo de orden de recogida en almacen, imprimible desde facturacion y trazable despues desde ventas e inventario.
+
+- Impacto funcional:
+  Permite entregar al cliente un documento de recogida y controlar el estado posterior de la entrega en almacen.
+
+- Impacto tecnico:
+  Requiere un modelo nuevo con lineas, estados, vistas de lista, accion desde factura, reporte imprimible y visibilidad segmentada entre ventas e inventario.
+
+- Estado:
+  Aprobado para siguiente sprint
