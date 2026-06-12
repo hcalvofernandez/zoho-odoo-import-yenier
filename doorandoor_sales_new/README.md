@@ -206,6 +206,19 @@ La intencion por ahora no es reemplazarlo de inmediato, sino reutilizar sus util
 - Se agrega porcentaje general de bonificacion en la ficha del cliente.
 - La cotizacion aplica automaticamente esa bonificacion al agregar productos cuando la linea no trae descuento previo.
 
+### 18.0.1.0.25
+
+- Se agregan pruebas automaticas para validar stock visible en cotizacion y bonificacion automatica por cliente.
+- Se adapta el suite de pruebas a esta base de Odoo 18 para mantener la validacion operativa del modulo.
+
+### 18.0.1.0.26
+
+- Se completa la Fase B con bonificacion por grupo de cliente en `res.partner.category`.
+- La cotizacion ahora aplica prioridad simple: descuento manual, luego bonificacion del cliente y despues bonificacion del grupo.
+- Se agrega trazabilidad del origen de la bonificacion en la linea comercial.
+- Se corrige la vista de grupos de cliente para compatibilidad con esta base de Odoo 18.
+- La actualizacion del modulo y el suite automatico quedan validados en la base `pruebas`.
+
 ## Autor
 
 Hanoi Calvo Fernández (doorandoor)

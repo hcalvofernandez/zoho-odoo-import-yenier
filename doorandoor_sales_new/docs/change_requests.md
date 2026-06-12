@@ -69,7 +69,7 @@
   Requiere extender `res.partner`, `sale.order.line` y la vista del cliente.
 
 - Estado:
-  En desarrollo
+  Implementado
 
 ## CR-0004
 
@@ -89,4 +89,4 @@
   Requiere extender `res.partner.category`, `sale.order.line` y vistas de clientes/cotizacion.
 
 - Estado:
-  Implementado pendiente de validacion en entorno
+  Implementado y validado en entorno

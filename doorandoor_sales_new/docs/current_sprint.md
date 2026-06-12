@@ -2,73 +2,71 @@
 
 ## Objetivo del sprint
 
-Iniciar la Fase B del backlog con foco en reglas comerciales:
+Iniciar la Fase C del backlog con foco en impresion comercial:
 
-- bonificaciones por cliente y por grupo
-- aplicacion automatica en cotizacion
-- prioridad clara entre regla comercial y descuento manual
+- revisar impuestos en documentos impresos
+- definir visibilidad de partidas en reportes
+- afinar la presentacion final para cliente y operaciones
 
 ## Alcance inmediato
 
 ### Tarea 1
 
 - Nombre:
-  Bonificacion por grupo de cliente
+  Revision del total de impuestos
 
 - Objetivo:
-  Permitir una bonificacion comercial base definida en categorias de cliente.
+  Confirmar como debe mostrarse el total de impuestos y su agrupacion en reportes.
 
 - Resultado esperado:
-  La cotizacion puede heredar una bonificacion desde el grupo comercial cuando el cliente no tenga una propia.
+  La factura impresa presenta impuestos con formato claro y consistente.
 
 - Estado:
-  Implementada
+  Pendiente
 
 ### Tarea 2
 
 - Nombre:
-  Prioridad de bonificacion automatica
+  Definicion de partidas visibles al imprimir
 
 - Objetivo:
-  Aplicar una regla simple y predecible al cargar productos en cotizacion.
+  Definir si algunas lineas deben ocultarse solo en salida impresa.
 
 - Propuesta inicial:
-  Prioridad: descuento manual > bonificacion del cliente > bonificacion del grupo.
+  La regla exacta sera confirmada con base en las notas del cliente.
 
 - Estado:
-  Implementada
+  Pendiente
 
 ### Tarea 3
 
 - Nombre:
-  Trazabilidad de origen de bonificacion
+  Afinacion visual de documentos impresos
 
 - Objetivo:
-  Mostrar de donde sale la bonificacion aplicada en la linea comercial.
+  Aplicar el mismo criterio visual en factura y reportes relacionados si hace falta.
 
 - Estado:
-  Implementada
+  Pendiente
 
 ## Fuera de alcance de este sprint
 
-- ajustes fiscales de impresion
 - foto de cliente
 - proyeccion de produccion
-- reglas avanzadas por categoria de producto
+- reglas avanzadas de bonificacion por categoria de producto
 
 ## Criterio de cierre
 
 Este sprint se considera listo cuando:
 
-- la cotizacion aplique bonificacion automatica sin sobreescribir descuento manual
-- exista bonificacion por cliente y por grupo
-- la linea muestre el origen de la bonificacion aplicada
+- el total de impuestos quede claro en impresion
+- se defina el criterio de partidas visibles en reportes
+- la salida impresa quede afinada para uso operativo
 - el cambio quede documentado y validado en el entorno Odoo
 
 ## Resultado actual
 
-- Ya existia la bonificacion por cliente en cotizacion.
-- Se agrega bonificacion por grupo de cliente en `res.partner.category`.
-- La prioridad queda asi: descuento manual, luego bonificacion del cliente, luego bonificacion del grupo.
-- La linea comercial guarda el origen de la bonificacion aplicada.
-- La validacion automatica queda pendiente de reactivar contenedores Docker despues del reinicio del entorno.
+- La Fase B queda cerrada y validada.
+- Ya existen bonificaciones por cliente y por grupo con prioridad base en cotizacion.
+- La validacion automatica en la base `pruebas` quedo en verde.
+- El siguiente frente activo pasa a ser impresion y ajustes fiscales visuales.

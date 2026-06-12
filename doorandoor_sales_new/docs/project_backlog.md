@@ -51,6 +51,8 @@ Actualmente el modulo cubre este flujo base:
 - Actualizacion de entrega al validar picking.
 - Mejoras visuales de la factura.
 - Traducciones base al español latino.
+- Stock visible en cotizacion.
+- Bonificaciones por cliente y por grupo con prioridad base.
 - Historial de desarrollo versionado en `README.md`.
 
 ## Pendientes provenientes de reunion con cliente
@@ -90,6 +92,22 @@ Posibles tareas:
 
 Prioridad:
 Alta
+
+Estado actual:
+Implementado en su version base.
+Ya existe:
+- bonificacion por cliente
+- bonificacion por grupo de cliente
+- aplicacion automatica en cotizacion
+- prioridad base:
+  - descuento manual
+  - bonificacion del cliente
+  - bonificacion del grupo
+
+Pendiente futuro:
+- reglas por categoria de producto
+- grupos comerciales mas especializados
+- prioridades configurables
 
 ### 3. Ajustes de impresion de documentos
 
@@ -190,13 +208,13 @@ Estos puntos necesitan decision funcional antes de implementarse:
 
 ## Siguiente paso recomendado
 
-Iniciar por `cotizacion con stock visible`, porque es lo mas directo de la reunion y genera impacto inmediato en el trabajo del equipo comercial.
+Iniciar la `Fase C`, enfocada en ajustes de impresion de impuestos y partidas, porque las fases comerciales A y B ya quedaron implementadas y validadas.
 
 ## Ejecucion actual
 
 La fase activa del proyecto pasa a ser:
 
-- Fase A
-  - stock visible en cotizacion
-  - regla base de disponibilidad
-  - preparacion de evolucion futura por almacen
+- Fase C
+  - ajustes de impresion de impuestos
+  - revisiones de partidas visibles en reportes
+  - afinacion de documentos impresos

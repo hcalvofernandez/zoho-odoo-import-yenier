@@ -2,27 +2,25 @@
 
 ## Pendiente
 
-- Ajustar impresion de impuestos y partidas segun notas del cliente.
 - Revisar reglas de despacho por almacen y por pago.
 - Agregar foto en ficha de cliente.
 - Diseñar proyeccion de produccion.
 
 ## En analisis
 
-- Regla exacta de bonificacion por grupos.
 - Reglas avanzadas de bonificacion por categoria de producto.
+- Regla exacta para ocultar partidas solo en impresion.
 - Definicion de linea o sistema de produccion en producto.
 
 ## En desarrollo
 
-- Validacion operativa de bonificaciones por cliente y grupo en entorno Docker.
+- Ajustes de impresion de impuestos y partidas segun notas del cliente.
 
 ## En pruebas
 
 - Flujo completo factura -> pago -> produccion -> despacho -> entrega.
 - Reportes impresos con firmas y orden de despacho en factura.
 - Validacion operativa de stock visible y lectura por almacenes en cotizacion.
-- Bonificaciones por grupo y prioridad contra descuento manual.
 
 ## Listo
 
@@ -42,3 +40,5 @@
 - Arquitectura lista para futura vista por almacen.
 - Bonificacion automatica por cliente en cotizacion.
 - Base de bonificacion por grupo de cliente.
+- Prioridad base de bonificacion contra descuento manual.
+- Validacion automatica de Fase B en entorno Odoo.
