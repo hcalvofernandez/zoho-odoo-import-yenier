@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="website_menu_documentation" model="website.menu">
+        <field name="name">Documentacion</field>
+        <field name="url">/doorandoor-sales-new/docs</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" eval="80"/>
+    </record>
+</odoo>

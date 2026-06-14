@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="docs_index" name="DoorAndDoor Docs Index">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_ddsn_docs_wrap">
+                <section class="o_ddsn_docs_hero">
+                    <div class="container py-5">
+                        <div class="row align-items-center g-4">
+                            <div class="col-lg-8">
+                                <span class="o_ddsn_docs_eyebrow">DoorAndDoor Sales New</span>
+                                <h1 class="display-5 fw-bold mt-3 mb-3">Documentacion del proyecto</h1>
+                                <p class="lead mb-0">
+                                    Esta seccion publica una seleccion de archivos Markdown informativos del modulo
+                                    para que el equipo pueda actualizar la documentacion desde el mismo repositorio de desarrollo.
+                                </p>
+                            </div>
+                            <div class="col-lg-4">
+                                    <div class="o_ddsn_docs_panel">
+                                    <div class="o_ddsn_docs_panel_label">Fuente</div>
+                                    <div class="o_ddsn_docs_panel_value">`addons/doorandoor_sales_new/docs`</div>
+                                    <div class="o_ddsn_docs_panel_note">Solo se publican guias informativas seleccionadas. Los documentos internos de planificacion y control quedan fuera del website.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="container py-5">
+                    <div class="row g-4">
+                        <t t-foreach="docs" t-as="doc">
+                            <div class="col-12 col-md-6 col-xl-4">
+                                <a t-att-href="docs_route + '/' + doc['slug']" class="o_ddsn_docs_card text-decoration-none">
+                                    <div class="o_ddsn_docs_card_inner">
+                                        <div class="o_ddsn_docs_card_label">Documento</div>
+                                        <h2 class="h4 mt-2 mb-3" t-out="doc['title']"/>
+                                        <p class="mb-0" t-out="doc['summary']"/>
+                                    </div>
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="docs_page" name="DoorAndDoor Docs Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_ddsn_docs_wrap">
+                <section class="o_ddsn_docs_header">
+                    <div class="container py-4 py-lg-5">
+                        <a t-att-href="docs_route" class="o_ddsn_docs_backlink text-decoration-none">Volver a documentacion</a>
+                        <div class="row g-4 mt-1">
+                            <div class="col-lg-3">
+                                <aside class="o_ddsn_docs_sidebar">
+                                    <div class="o_ddsn_docs_sidebar_title">Indice</div>
+                                    <ul class="list-unstyled mb-0">
+                                        <t t-foreach="docs" t-as="item">
+                                            <li class="mb-2">
+                                                <a t-att-href="docs_route + '/' + item['slug']"
+                                                   t-att-class="'o_ddsn_docs_sidebar_link active' if item['slug'] == doc['slug'] else 'o_ddsn_docs_sidebar_link'">
+                                                    <t t-out="item['title']"/>
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </aside>
+                            </div>
+                            <div class="col-lg-9">
+                                <article class="o_ddsn_docs_article">
+                                    <header class="mb-4">
+                                        <div class="o_ddsn_docs_article_label">DoorAndDoor Sales New</div>
+                                        <h1 class="display-6 fw-bold mt-2 mb-0" t-out="doc['title']"/>
+                                    </header>
+                                    <div class="o_ddsn_docs_content" t-out="doc_html"/>
+                                    <nav class="o_ddsn_docs_nav mt-5">
+                                        <div>
+                                            <t t-if="previous_doc">
+                                                <a t-att-href="docs_route + '/' + previous_doc['slug']" class="o_ddsn_docs_nav_link">
+                                                    ← <t t-out="previous_doc['title']"/>
+                                                </a>
+                                            </t>
+                                        </div>
+                                        <div class="text-end">
+                                            <t t-if="next_doc">
+                                                <a t-att-href="docs_route + '/' + next_doc['slug']" class="o_ddsn_docs_nav_link">
+                                                    <t t-out="next_doc['title']"/> →
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </nav>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <style>
+                .o_ddsn_docs_wrap {
+                    background:
+                        radial-gradient(circle at top left, rgba(240, 196, 25, 0.18), transparent 34%),
+                        linear-gradient(180deg, #fcfbf7 0%, #f3efe4 100%);
+                    color: #1f2933;
+                }
+                .o_ddsn_docs_hero,
+                .o_ddsn_docs_header {
+                    background:
+                        linear-gradient(135deg, rgba(17, 24, 39, 0.92), rgba(120, 53, 15, 0.86)),
+                        #111827;
+                    color: #f9fafb;
+                }
+                .o_ddsn_docs_eyebrow,
+                .o_ddsn_docs_article_label,
+                .o_ddsn_docs_card_label,
+                .o_ddsn_docs_panel_label,
+                .o_ddsn_docs_sidebar_title {
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                }
+                .o_ddsn_docs_panel,
+                .o_ddsn_docs_card_inner,
+                .o_ddsn_docs_sidebar,
+                .o_ddsn_docs_article {
+                    background: rgba(255, 255, 255, 0.9);
+                    border: 1px solid rgba(148, 163, 184, 0.18);
+                    border-radius: 24px;
+                    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+                }
+                .o_ddsn_docs_panel {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.12);
+                    backdrop-filter: blur(8px);
+                    padding: 1.5rem;
+                }
+                .o_ddsn_docs_panel_value {
+                    font-family: "Courier New", monospace;
+                    font-size: 0.95rem;
+                    margin-top: 0.35rem;
+                }
+                .o_ddsn_docs_panel_note {
+                    opacity: 0.9;
+                    margin-top: 0.8rem;
+                }
+                .o_ddsn_docs_card {
+                    display: block;
+                    color: inherit;
+                    height: 100%;
+                }
+                .o_ddsn_docs_card_inner {
+                    padding: 1.5rem;
+                    min-height: 100%;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                }
+                .o_ddsn_docs_card:hover .o_ddsn_docs_card_inner {
+                    transform: translateY(-4px);
+                    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+                }
+                .o_ddsn_docs_backlink {
+                    color: rgba(255, 255, 255, 0.9);
+                    font-weight: 600;
+                }
+                .o_ddsn_docs_sidebar {
+                    padding: 1.25rem;
+                    position: sticky;
+                    top: 2rem;
+                }
+                .o_ddsn_docs_sidebar_link {
+                    display: block;
+                    padding: 0.45rem 0.7rem;
+                    border-radius: 12px;
+                    color: #334155;
+                }
+                .o_ddsn_docs_sidebar_link.active,
+                .o_ddsn_docs_sidebar_link:hover {
+                    background: #111827;
+                    color: #fff;
+                    text-decoration: none;
+                }
+                .o_ddsn_docs_article {
+                    padding: 2rem;
+                }
+                .o_ddsn_docs_content {
+                    line-height: 1.75;
+                    font-size: 1.02rem;
+                }
+                .o_ddsn_docs_content h2,
+                .o_ddsn_docs_content h3,
+                .o_ddsn_docs_content h4 {
+                    margin-top: 2rem;
+                    margin-bottom: 0.9rem;
+                    color: #111827;
+                }
+                .o_ddsn_docs_content p,
+                .o_ddsn_docs_content li {
+                    color: #334155;
+                }
+                .o_ddsn_docs_content pre {
+                    background: #111827;
+                    color: #f8fafc;
+                    padding: 1rem 1.25rem;
+                    border-radius: 16px;
+                    overflow-x: auto;
+                }
+                .o_ddsn_docs_content code {
+                    background: rgba(148, 163, 184, 0.15);
+                    color: #7c2d12;
+                    padding: 0.15rem 0.35rem;
+                    border-radius: 6px;
+                }
+                .o_ddsn_docs_content pre code {
+                    background: transparent;
+                    color: inherit;
+                    padding: 0;
+                }
+                .o_ddsn_docs_content a {
+                    color: #92400e;
+                    font-weight: 600;
+                }
+                .o_ddsn_docs_nav {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 1rem;
+                    border-top: 1px solid rgba(148, 163, 184, 0.25);
+                    padding-top: 1.5rem;
+                }
+                .o_ddsn_docs_nav_link {
+                    color: #111827;
+                    font-weight: 600;
+                }
+                @media (max-width: 991.98px) {
+                    .o_ddsn_docs_sidebar {
+                        position: static;
+                    }
+                    .o_ddsn_docs_article {
+                        padding: 1.35rem;
+                    }
+                }
+            </style>
+        </t>
+    </template>
+</odoo>
