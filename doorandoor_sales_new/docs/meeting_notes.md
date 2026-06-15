@@ -31,3 +31,23 @@ Fecha -- 14 de junio 2026
 - Resultado:
   Los puntos fueron pasados a backlog funcional en `docs/project_backlog.md`.
 
+## Seguimiento interno posterior 15-06-26
+
+- Tema:
+  Cierre tecnico de los puntos ya resueltos y congelacion temporal de los puntos aun no definidos por el cliente.
+
+- Acuerdos:
+  - se da por cerrado el ajuste de despacho solo con factura totalmente pagada
+  - se da por validado el flujo donde fabricacion puede generarse con pago parcial
+  - se deja implementada la visualizacion de stock por almacen tambien en facturas
+  - no se continuara desarrollando reglas adicionales por almacen ni refinamientos visuales no definidos hasta nueva confirmacion del cliente
+
+- Dudas:
+  - si el stock visible debe solo informar o tambien bloquear
+  - cual es la regla exacta de seleccion de almacen
+  - si los semaforos de stock deben mantenerse en venta, en factura o en ambos lugares
+  - que refinamientos de impresion siguen siendo realmente necesarios
+
+- Acciones:
+  - mantener documentado como cerrado solo lo implementado y probado
+  - congelar los puntos aun abiertos hasta nueva reunion con el cliente

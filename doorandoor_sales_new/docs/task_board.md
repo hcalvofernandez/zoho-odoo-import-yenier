@@ -11,6 +11,12 @@
 - Regla exacta para ocultar partidas solo en impresion.
 - Definicion de linea o sistema de produccion en producto.
 
+## Congelado hasta definicion del cliente
+
+- Regla exacta de seleccion de almacen para despacho.
+- Decision de mantener semaforos de stock en venta, en factura o en ambos lugares.
+- Refinamientos visuales adicionales no confirmados en facturacion.
+
 ## En desarrollo
 
 - Ajustes adicionales que salgan de la prueba real con el cliente.
@@ -24,6 +30,11 @@
 - Reportes impresos con firmas y orden de despacho en factura.
 - Validacion operativa de stock visible y lectura por almacenes en cotizacion.
 - Validacion operativa de stock visible y lectura por almacenes en facturacion.
+
+## Cerrado al corte actual
+
+- Ajuste de reglas de pago para separar despacho y fabricacion.
+- Extension de stock por almacen desde venta hacia factura.
 
 ## Listo
 

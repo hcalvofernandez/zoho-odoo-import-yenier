@@ -81,3 +81,18 @@ Este sprint se considera listo cuando:
 - Las ordenes de recogida ya se generan desde factura, se listan por estado y pueden marcarse como entregadas.
 - La lista queda visible desde ventas e inventario.
 - La ficha del cliente ya muestra foto editable en `res.partner`.
+
+## Cierre documental al corte actual
+
+Hasta este punto se considera cerrado y documentado:
+
+- la separacion entre despacho con pago total y fabricacion con pago parcial
+- la extension de stock por almacen hacia facturacion
+- la base de recogida operativa en almacen
+
+Queda expresamente fuera de avance adicional hasta nueva definicion del cliente:
+
+- reglas avanzadas por almacen
+- criterio final de semaforos y visibilidad entre venta y factura
+- refinamientos adicionales de impresion
+- decisiones de produccion avanzada aun no definidas

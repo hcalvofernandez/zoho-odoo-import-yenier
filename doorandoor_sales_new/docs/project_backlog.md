@@ -91,6 +91,9 @@ Pendiente futuro:
 - definir criterio final de proxima disponibilidad
 - endurecer la decision operativa por almacen
 
+Estado de avance al corte:
+Congelado en estos pendientes hasta nueva definicion funcional del cliente.
+
 ### 2. Bonificaciones y descuentos por cliente
 
 Objetivo:
@@ -174,6 +177,9 @@ Pendiente futuro:
 - definir comportamiento exacto con varios almacenes
 - definir reserva por almacen principal o por almacen con stock
 - revisar si debe existir alguna excepcion operativa controlada
+
+Estado de avance al corte:
+Congelado hasta que el cliente confirme la politica exacta por almacen.
 
 ### 5. Foto en ficha de cliente
 
@@ -312,7 +318,9 @@ Para esta fase se toma como regla operativa inicial:
 
 ## Siguiente paso recomendado
 
-Continuar la validacion operativa con el cliente enfocando los siguientes ajustes sobre:
+No avanzar sobre nuevas reglas de negocio hasta que el cliente confirme los puntos abiertos.
+
+Al reanudar, retomar primero:
 
 - comportamiento por almacen
 - criterio de stock visible en facturacion y cotizacion
