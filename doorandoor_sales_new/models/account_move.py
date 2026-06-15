@@ -529,6 +529,9 @@ class AccountMove(models.Model):
 
     def _ddsn_sync_stock_fulfillment_documents(self):
         for move in self:
+            if not move._ddsn_is_fully_paid():
+                continue
+
             stock_lines = move.fulfillment_line_ids.filtered(
                 lambda line: line.state == "ready_stock" and line.qty_released > line.qty_sent_stock
             )
@@ -579,6 +582,9 @@ class AccountMove(models.Model):
 
     def _ddsn_sync_finished_mrp_to_outgoing_picking(self, fulfillment_line):
         self.ensure_one()
+        if not self._ddsn_is_fully_paid():
+            return False
+
         qty_to_send = max(fulfillment_line.qty_sent_mrp - fulfillment_line.qty_sent_stock, 0.0)
         if qty_to_send <= 0:
             return False
@@ -637,6 +643,22 @@ class AccountMove(models.Model):
         if self.picking_creation_policy == "per_payment" and latest_log:
             return f"{self.name} | Release {latest_log.id}"
         return self.name or self.ref or self.payment_reference
+
+    def _ddsn_is_fully_paid(self):
+        self.ensure_one()
+        total_amount = abs(self.amount_total)
+        residual_amount = abs(self.amount_residual)
+        currency = self.currency_id
+        if not total_amount or currency.is_zero(total_amount):
+            return True
+        if currency.is_zero(residual_amount):
+            return True
+
+        latest_log = self.payment_release_log_ids.sorted(key=lambda log: log.write_date or log.create_date)[-1:]
+        if latest_log and latest_log.amount_applied >= total_amount:
+            return True
+
+        return False
 
     def _ddsn_get_outgoing_picking_type(self):
         self.ensure_one()

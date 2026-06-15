@@ -71,6 +71,9 @@ Este sprint se considera listo cuando:
 - Las fases A y B quedan cerradas y validadas.
 - La Fase C ya tiene el ajuste inicial de impuestos en factura impresa.
 - La Fase E queda implementada y validada.
+- La regla de despacho queda ajustada para exigir factura totalmente pagada.
+- La regla de fabricacion queda validada con pago parcial.
+- La lectura de stock por almacen queda extendida tambien a lineas de factura.
 - La regla base de `listo para recoger` queda cerrada:
   - linea con cantidad liberada no entregada
   - con picking asociado no cancelado

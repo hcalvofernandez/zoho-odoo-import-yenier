@@ -116,6 +116,24 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertEqual(fulfillment_line.qty_pending_payment, 2.0)
         self.assertEqual(fulfillment_line.qty_pending_delivery, 2.0)
 
+    def test_invoice_line_shows_stock_visibility(self):
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)],
+            limit=1,
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            self.product,
+            warehouse.lot_stock_id,
+            6.0,
+        )
+        move = self._create_customer_invoice()
+        invoice_line = move.invoice_line_ids.filtered(lambda line: line.product_id)
+
+        self.assertEqual(invoice_line.ddsn_available_qty, 6.0)
+        self.assertIn("6.00", invoice_line.ddsn_stock_display)
+        self.assertIn(warehouse.code or warehouse.name, invoice_line.ddsn_warehouse_stock_display)
+        self.assertIn(warehouse.code or warehouse.name, invoice_line.ddsn_warehouse_stock_text)
+
     def test_posting_same_invoice_does_not_duplicate_fulfillment_lines(self):
         move = self._create_customer_invoice()
 
@@ -151,6 +169,17 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertEqual(fulfillment_line.state, "in_process")
         self.assertEqual(move.picking_count, 1)
 
+    def test_partial_payment_does_not_create_stock_picking(self):
+        move = self._create_customer_invoice()
+        move.action_post()
+
+        move._ddsn_apply_release_for_amount(move.amount_total / 2)
+
+        fulfillment_line = move.fulfillment_line_ids
+        self.assertFalse(fulfillment_line.picking_id, "No debe crearse picking con pago parcial.")
+        self.assertEqual(fulfillment_line.qty_sent_stock, 0.0)
+        self.assertEqual(fulfillment_line.state, "ready_stock")
+
     def test_release_creates_mrp_production(self):
         move = self._create_manufacturing_invoice()
         move.fulfillment_route_policy = "force_mrp"
@@ -164,6 +193,22 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertEqual(fulfillment_line.state, "in_process")
         self.assertEqual(move.mrp_production_count, 1)
 
+    def test_partial_payment_can_create_mrp_production(self):
+        move = self._create_manufacturing_invoice()
+        move.fulfillment_route_policy = "force_mrp"
+        move.payment_release_policy = "prorated"
+        move.action_post()
+
+        move._ddsn_apply_release_for_amount(move.amount_total / 2)
+
+        fulfillment_line = move.fulfillment_line_ids
+        self.assertTrue(
+            fulfillment_line.mrp_production_id,
+            "La fabricacion debe poder generarse con pago parcial.",
+        )
+        self.assertEqual(fulfillment_line.qty_released, 1.0)
+        self.assertEqual(fulfillment_line.qty_sent_mrp, fulfillment_line.qty_released)
+
     def test_completed_mrp_creates_outgoing_picking(self):
         move = self._create_manufacturing_invoice()
         move.fulfillment_route_policy = "force_mrp"
@@ -176,3 +221,17 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertTrue(picking, "La produccion terminada debe preparar un picking de salida.")
         self.assertEqual(fulfillment_line.picking_id, picking)
         self.assertEqual(fulfillment_line.qty_sent_stock, fulfillment_line.qty_sent_mrp)
+
+    def test_completed_mrp_does_not_create_outgoing_picking_with_partial_payment(self):
+        move = self._create_manufacturing_invoice()
+        move.fulfillment_route_policy = "force_mrp"
+        move.payment_release_policy = "prorated"
+        move.action_post()
+        move._ddsn_apply_release_for_amount(move.amount_total / 2)
+
+        fulfillment_line = move.fulfillment_line_ids
+        picking = move._ddsn_sync_finished_mrp_to_outgoing_picking(fulfillment_line)
+
+        self.assertFalse(picking, "No debe generarse picking de salida si la factura no esta totalmente pagada.")
+        self.assertFalse(fulfillment_line.picking_id)
+        self.assertEqual(fulfillment_line.qty_sent_stock, 0.0)

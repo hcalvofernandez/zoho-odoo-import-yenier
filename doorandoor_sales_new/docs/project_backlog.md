@@ -54,6 +54,7 @@ Actualmente el modulo cubre este flujo base:
 - Stock visible en cotizacion.
 - Bonificaciones por cliente y por grupo con prioridad base.
 - Ajuste de impresion de impuestos en factura.
+- Visibilidad de stock por almacen en lineas de factura.
 - Ordenes de recogida en almacen con lista, estados y reporte.
 - Foto visible y editable en ficha del cliente.
 - Historial de desarrollo versionado en `README.md`.
@@ -77,6 +78,18 @@ Posibles tareas:
 
 Prioridad:
 Alta
+
+Estado actual:
+Implementado y extendido al flujo de facturacion.
+Ya existe:
+- disponibilidad por producto en `sale.order.line`
+- lectura por almacen en cotizacion
+- visibilidad equivalente en lineas de factura
+
+Pendiente futuro:
+- definir si la visualizacion debe bloquear o solo informar
+- definir criterio final de proxima disponibilidad
+- endurecer la decision operativa por almacen
 
 ### 2. Bonificaciones y descuentos por cliente
 
@@ -149,6 +162,18 @@ Posibles tareas:
 
 Prioridad:
 Alta
+
+Estado actual:
+Implementado parcialmente segun ultima validacion.
+Ya existe:
+- despacho por stock solo con factura totalmente pagada
+- fabricacion permitida con pago parcial
+- produccion terminada no genera picking de salida si la factura aun no esta totalmente pagada
+
+Pendiente futuro:
+- definir comportamiento exacto con varios almacenes
+- definir reserva por almacen principal o por almacen con stock
+- revisar si debe existir alguna excepcion operativa controlada
 
 ### 5. Foto en ficha de cliente
 
@@ -287,7 +312,11 @@ Para esta fase se toma como regla operativa inicial:
 
 ## Siguiente paso recomendado
 
-Esperar la prueba operativa con el cliente y usar ese resultado para priorizar el siguiente ajuste real del flujo.
+Continuar la validacion operativa con el cliente enfocando los siguientes ajustes sobre:
+
+- comportamiento por almacen
+- criterio de stock visible en facturacion y cotizacion
+- siguientes decisiones de produccion avanzada
 
 ## Ejecucion actual
 

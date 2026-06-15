@@ -2,7 +2,7 @@
 
 ## Pendiente
 
-- Revisar reglas de despacho por almacen y por pago.
+- Revisar reglas de despacho por almacen.
 - Diseñar proyeccion de produccion.
 
 ## En analisis
@@ -14,12 +14,16 @@
 ## En desarrollo
 
 - Ajustes adicionales que salgan de la prueba real con el cliente.
+- Validacion visual de stock por almacen en lineas de factura.
 
 ## En pruebas
 
 - Flujo completo factura -> pago -> produccion -> despacho -> entrega.
+- Regla de despacho solo con factura totalmente pagada.
+- Regla de fabricacion permitida con pago parcial.
 - Reportes impresos con firmas y orden de despacho en factura.
 - Validacion operativa de stock visible y lectura por almacenes en cotizacion.
+- Validacion operativa de stock visible y lectura por almacenes en facturacion.
 
 ## Listo
 
@@ -37,6 +41,7 @@
 - Stock visible en cotizacion.
 - Regla base de disponibilidad para equipo comercial.
 - Arquitectura lista para futura vista por almacen.
+- Regla separada de fabricacion parcial y despacho con pago total.
 - Bonificacion automatica por cliente en cotizacion.
 - Base de bonificacion por grupo de cliente.
 - Prioridad base de bonificacion contra descuento manual.

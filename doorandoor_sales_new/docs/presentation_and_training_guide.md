@@ -61,9 +61,9 @@ El siguiente nivel de trabajo no es crear la base, sino endurecer reglas operati
 ### Cerrar con validacion funcional
 
 - Liberacion por pago con casos reales de pago parcial.
-- Creacion automatica de picking por stock.
-- Creacion automatica de orden de fabricacion.
-- Flujo produccion terminada -> picking de salida.
+- Despacho por stock solo con factura totalmente pagada.
+- Creacion automatica de orden de fabricacion con pago parcial.
+- Flujo produccion terminada -> picking de salida solo con factura totalmente pagada.
 - Validacion de picking actualiza entrega y estado final.
 
 ### Continuar desarrollo
@@ -126,8 +126,8 @@ Presentar por bloques para que la audiencia entienda mejor el valor funcional.
 ### Que hace
 
 - el pago aplicado libera cantidades
-- la liberacion puede generar despacho por stock
-- la liberacion puede generar orden de fabricacion
+- la liberacion puede generar despacho por stock solo cuando la factura esta totalmente pagada
+- la liberacion puede generar orden de fabricacion con pago parcial
 - el sistema mantiene trazabilidad del proceso
 
 ### Beneficio
@@ -141,6 +141,7 @@ Presentar por bloques para que la audiencia entienda mejor el valor funcional.
 - smart button de `Releases`
 - smart button de `Dispatches`
 - smart button de `Manufacturing`
+- contraste entre factura parcialmente pagada y factura totalmente pagada
 
 ### Mensaje de cierre del bloque
 
@@ -149,6 +150,11 @@ Presentar por bloques para que la audiencia entienda mejor el valor funcional.
 ### Nota para presentar con cautela
 
 Conviene explicar que la base ya existe, pero que las reglas mas finas por almacen y disponibilidad total o parcial siguen como siguiente etapa de refinamiento.
+
+Tambien conviene explicar que ya quedo separada la regla operativa principal:
+
+- fabricacion permitida con pago parcial
+- despacho permitido solo con pago total
 
 ## Bloque 3 - Mejoras para el equipo comercial
 
@@ -213,6 +219,7 @@ Conviene explicar que la base ya existe, pero que las reglas mas finas por almac
 - el total fiscal aparece agrupado
 - se agregan bloques de firma en documentos principales
 - la factura puede mostrar referencias de despacho
+- la factura ahora puede mostrar visibilidad de stock y lectura por almacen en sus lineas
 
 ### Beneficio
 
@@ -221,6 +228,7 @@ Conviene explicar que la base ya existe, pero que las reglas mas finas por almac
 
 ### Que mostrar en demo
 
+- lineas de factura con stock total y tags por almacen
 - impresion de factura
 - impresion de pedido
 - impresion de entrega
