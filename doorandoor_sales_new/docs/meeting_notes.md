@@ -16,8 +16,9 @@
   Revision del flujo comercial, impresion, stock, bonificaciones y produccion.
 
 - Puntos detectados:
-  - mejorar impresion de factura e impuestos
-  - mostrar stock al momento de cotizar
+  - Las factura para generar la orden de despacho deben estar pagadas completamente.
+  - la Regla de facturación debe tener al menos el pago parcial para para poder generar la orden de fabricación.
+  - mostrar stock al momento de cotizar.
   - revisar reglas de despacho segun pago y almacen
   - agregar foto en cliente
   - definir bonificaciones por cliente y grupo

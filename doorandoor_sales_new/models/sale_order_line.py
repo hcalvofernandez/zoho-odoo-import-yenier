@@ -30,6 +30,18 @@ class SaleOrderLine(models.Model):
         readonly=True,
     )
 
+    ddsn_warehouse_stock_display = fields.Char(
+        string="Warehouse Stock",
+        compute="_compute_ddsn_stock_visibility",
+        readonly=True,
+    )
+
+    ddsn_warehouse_stock_text = fields.Text(
+        string="Warehouse Stock Detail",
+        compute="_compute_ddsn_stock_visibility",
+        readonly=True,
+    )
+
     ddsn_bonus_percent = fields.Float(
         string="Applied Bonus %",
         readonly=True,
@@ -54,6 +66,8 @@ class SaleOrderLine(models.Model):
             line.ddsn_stock_uom_name = False
             line.ddsn_stock_display = False
             line.ddsn_warehouse_stock_html = False
+            line.ddsn_warehouse_stock_display = False
+            line.ddsn_warehouse_stock_text = False
 
             product = line.product_id
             if not product or product.type not in ("product", "consu"):
@@ -71,6 +85,8 @@ class SaleOrderLine(models.Model):
             line.ddsn_stock_uom_name = uom_name
             line.ddsn_stock_display = f"{available_qty:.2f} {uom_name}"
             line.ddsn_warehouse_stock_html = line._ddsn_get_warehouse_stock_html()
+            line.ddsn_warehouse_stock_display = line._ddsn_get_warehouse_stock_display()
+            line.ddsn_warehouse_stock_text = line._ddsn_get_warehouse_stock_text()
 
     def _ddsn_get_warehouse_stock_html(self):
         self.ensure_one()
@@ -126,6 +142,56 @@ class SaleOrderLine(models.Model):
             )
 
         return "".join(badges) or False
+
+    def _ddsn_get_warehouse_stock_display(self):
+        self.ensure_one()
+        product = self.product_id
+        if not product or product.type not in ("product", "consu"):
+            return False
+
+        warehouses = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.order_id.company_id.id)],
+            order="sequence, id",
+        )
+        if not warehouses:
+            return False
+
+        chunks = []
+        for warehouse in warehouses:
+            location = warehouse.lot_stock_id
+            if not location:
+                continue
+
+            qty = product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+            warehouse_label = warehouse.code or warehouse.name
+            chunks.append(f"{warehouse_label}: {qty:.2f}")
+
+        return " | ".join(chunks) or False
+
+    def _ddsn_get_warehouse_stock_text(self):
+        self.ensure_one()
+        product = self.product_id
+        if not product or product.type not in ("product", "consu"):
+            return False
+
+        warehouses = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.order_id.company_id.id)],
+            order="sequence, id",
+        )
+        if not warehouses:
+            return False
+
+        lines = []
+        for warehouse in warehouses:
+            location = warehouse.lot_stock_id
+            if not location:
+                continue
+
+            qty = product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+            warehouse_label = warehouse.code or warehouse.name
+            lines.append(f"{warehouse_label}: {qty:.2f}")
+
+        return "\n".join(lines) or False
 
     @api.onchange("product_id")
     def _onchange_ddsn_apply_partner_bonus(self):

@@ -63,6 +63,8 @@ class TestSaleOrderCommercialFeatures(TransactionCase):
         self.assertEqual(line.ddsn_available_qty, 8.0)
         self.assertEqual(line.ddsn_stock_uom_name, self.product.uom_id.display_name)
         self.assertIn("8.00", line.ddsn_stock_display)
+        self.assertIn("8.00", line.ddsn_warehouse_stock_display)
+        self.assertIn(self.warehouse.code or self.warehouse.name, line.ddsn_warehouse_stock_display)
         self.assertIn(self.warehouse.code or self.warehouse.name, line.ddsn_warehouse_stock_html)
 
     def test_partner_bonus_is_applied_when_line_has_no_discount(self):

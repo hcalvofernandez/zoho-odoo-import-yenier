@@ -8,10 +8,17 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
-                    <field name="ddsn_stock_display" string="Stock" optional="show" readonly="1"/>
-                    <field name="ddsn_warehouse_stock_html" string="Warehouses" widget="html" optional="show" readonly="1"/>
+                    <field name="ddsn_stock_display" string="Stock" readonly="1"/>
+                    <field name="ddsn_warehouse_stock_display" string="Warehouses" readonly="1"/>
+                    <field name="ddsn_warehouse_stock_html" string="Warehouses HTML" widget="html" optional="hide" readonly="1"/>
                     <field name="ddsn_bonus_percent" string="Bonus %" optional="show" readonly="1"/>
                     <field name="ddsn_bonus_source" string="Bonus Source" optional="hide" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="after">
+                    <group string="Stock Visibility" colspan="2">
+                        <field name="ddsn_stock_display" readonly="1"/>
+                        <field name="ddsn_warehouse_stock_text" readonly="1" widget="text"/>
+                    </group>
                 </xpath>
             </field>
         </record>
