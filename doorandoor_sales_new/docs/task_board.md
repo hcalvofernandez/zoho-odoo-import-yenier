@@ -27,6 +27,8 @@
 - Flujo completo factura -> pago -> produccion -> despacho -> entrega.
 - Regla de despacho solo con factura totalmente pagada.
 - Regla de fabricacion permitida con pago parcial.
+- Reutilizacion de picking existente para evitar duplicidad entre venta y factura.
+- Bloqueo de ajuste manual de inventario por debajo de cantidades ya liberadas por pago.
 - Reportes impresos con firmas y orden de despacho en factura.
 - Validacion operativa de stock visible y lectura por almacenes en cotizacion.
 - Validacion operativa de stock visible y lectura por almacenes en facturacion.
@@ -35,6 +37,8 @@
 
 - Ajuste de reglas de pago para separar despacho y fabricacion.
 - Extension de stock por almacen desde venta hacia factura.
+- Prevencion de duplicacion de `stock.move` y `stock.picking` cuando una entrega ya existe en la venta relacionada.
+- Proteccion contra ajustes manuales de inventario que reduzcan stock comprometido por facturas con pago aplicado.
 
 ## Listo
 

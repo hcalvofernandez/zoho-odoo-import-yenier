@@ -110,3 +110,46 @@
 
 - Estado:
   Implementado y validado en entorno
+
+## CR-0006
+
+- Fecha:
+  2026-06-19
+
+- Solicitado por:
+  Cliente DoorAndDoor
+
+- Descripcion:
+  Evitar que una misma salida fisica de mercancia quede duplicada en historial cuando el flujo puede dispararse tanto desde la venta como desde la factura.
+
+- Impacto funcional:
+  La entrega ya existente de la venta debe reutilizarse desde facturacion en lugar de crear otra operacion paralela para la misma mercancia.
+
+- Impacto tecnico:
+  Requiere reutilizar `stock.picking` abiertos de la `sale.order` asociada y evitar crear `stock.move` duplicados para la misma `sale_line_id` dentro del mismo picking.
+
+- Estado:
+  Implementado y pendiente de validacion final en entorno Docker Odoo
+
+## CR-0007
+
+- Fecha:
+  2026-06-19
+
+- Solicitado por:
+  Cliente DoorAndDoor
+
+- Descripcion:
+  Evitar inconsistencias entre facturas pagadas o parcialmente pagadas y ajustes manuales de inventario que reduzcan el stock fisico sin respetar las unidades ya comprometidas por cobro.
+
+- Impacto funcional:
+  El usuario no debe poder dejar el stock por debajo de las cantidades ya liberadas por pago mientras esas unidades sigan pendientes de entrega.
+
+- Impacto tecnico:
+  Requiere interceptar los ajustes manuales de `stock.quant`, calcular cantidades bloqueadas por `doorandoor.fulfillment.line` y rechazar cualquier ajuste que deje el inventario por debajo de las unidades liberadas no entregadas.
+
+- Estado:
+  Implementado y validado en entorno Docker Odoo
+
+- Nota de contexto:
+  Durante la validacion aparecieron productos migrados desde Zoho con tipo consumible o servicio. Ese comportamiento se reconoce como condicion heredada de datos migrados y ya fue considerado en la preparacion de la base de produccion.

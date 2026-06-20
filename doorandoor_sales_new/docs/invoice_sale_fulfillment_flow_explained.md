@@ -207,6 +207,25 @@ Esto es util, por ejemplo, para:
 - casos donde se necesita reconstruir enlaces
 - validaciones funcionales despues de cambios
 
+## Relacion con el stock visible en factura
+
+Una vez creada la base `factura -> venta -> fulfillment`, esa misma estructura se usa para mostrar mejor la disponibilidad comercial en las lineas de factura.
+
+Eso significa que la columna de stock visible no debe interpretarse como simple existencia fisica bruta.
+
+Ahora se usa tambien para descontar cantidades que ya quedaron comprometidas por pagos anteriores y siguen pendientes de entrega.
+
+## Que significa esto para el usuario
+
+Cuando una factura nueva se esta preparando, el usuario ve una cifra mas realista de lo que aun puede comprometer comercialmente.
+
+En la practica:
+
+- si hay stock fisico pero parte ya fue liberada por otra factura
+- esa parte ya no debe verse como totalmente libre
+
+De esa manera, la base de `fulfillment` no solo sirve para seguimiento interno, sino tambien para mejorar decisiones operativas y comerciales en pantalla.
+
 ## Que rol cumple cada pieza
 
 ### Factura

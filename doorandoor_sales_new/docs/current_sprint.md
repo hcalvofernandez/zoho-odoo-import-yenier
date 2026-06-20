@@ -81,6 +81,26 @@ Este sprint se considera listo cuando:
 - Las ordenes de recogida ya se generan desde factura, se listan por estado y pueden marcarse como entregadas.
 - La lista queda visible desde ventas e inventario.
 - La ficha del cliente ya muestra foto editable en `res.partner`.
+- El flujo de despacho ahora reutiliza el picking abierto de la venta cuando la factura relacionada intenta liberar esa misma salida.
+- Se evita crear `stock.move` duplicados en el mismo picking para la misma `sale_line_id`.
+
+## Problemas detectados al cierre
+
+- Se detecto riesgo de que un ajuste manual de inventario redujera el stock fisico aun cuando una factura ya tenia cantidades pagadas o parcialmente pagadas comprometidas para entrega.
+- Esto podia romper la consistencia entre lo cobrado, lo liberado por pago y la existencia real en almacen.
+
+## Soluciones aplicadas
+
+- Se bloqueo el ajuste manual de inventario cuando intenta dejar el stock por debajo de las unidades ya liberadas por facturas pagadas o parcialmente pagadas.
+- La validacion se apoya en las lineas de cumplimiento del modulo para calcular cantidad liberada pendiente de entrega.
+- El comportamiento fue validado con pruebas automatizadas ejecutadas en el entorno Docker Odoo.
+- La columna de stock visible en lineas de factura ahora muestra stock neto vendible, descontando cantidades ya comprometidas por pagos anteriores pendientes de entrega.
+
+## Contexto de migracion conocido
+
+- Durante las pruebas aparecieron productos heredados desde Zoho con tipificacion de consumible o servicio, lo que impide tratarlos como inventario fisico real dentro de Odoo.
+- Ese punto se considera una condicion conocida de datos migrados y no una falla del bloqueo funcional implementado.
+- Para la base de produccion, este criterio ya quedo contemplado en la preparacion de la migracion desde Zoho para asegurar productos inventariables con tipificacion correcta.
 
 ## Cierre documental al corte actual
 
@@ -89,6 +109,8 @@ Hasta este punto se considera cerrado y documentado:
 - la separacion entre despacho con pago total y fabricacion con pago parcial
 - la extension de stock por almacen hacia facturacion
 - la base de recogida operativa en almacen
+- la proteccion contra duplicacion de salida entre venta y factura
+- el bloqueo de ajustes manuales que dejen stock por debajo de cantidades ya comprometidas por pago
 
 Queda expresamente fuera de avance adicional hasta nueva definicion del cliente:
 

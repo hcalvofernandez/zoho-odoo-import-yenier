@@ -222,6 +222,26 @@ Eso hace que:
 - `qty_sent_stock` aumente
 - el estado pase a `in_process`
 
+## Proteccion contra duplicidad de salida
+
+Antes de crear una nueva salida, el modulo revisa si ya existe un `stock.picking` abierto relacionado con la venta generada desde esa factura.
+
+Si existe una salida abierta compatible:
+
+- el sistema reutiliza ese picking
+- evita crear una segunda salida para la misma operacion fisica
+- evita duplicar `stock.move` para la misma linea de venta dentro del mismo picking
+
+## Que significa esto operativamente
+
+Si una venta ya tenia una salida preparada y luego la factura intenta liberar esa misma mercancia, el sistema no debe dibujar dos despachos separados en historial.
+
+La idea practica es:
+
+- una salida fisica
+- un solo documento logistico coherente
+- una sola trazabilidad de movimientos para esa operacion
+
 ## Que significa esto operativamente
 
 La linea deja de estar solo autorizada en teoria y pasa a tener un documento logistico real asociado.
@@ -298,6 +318,35 @@ Cuando el picking se valida:
 - si ya no queda pendiente, la linea pasa a `delivered`
 
 Ademas, la factura recalcula su `release_state`.
+
+## Regla adicional sobre ajustes manuales de inventario
+
+El flujo ahora protege tambien la coherencia entre pago y stock fisico.
+
+Si un usuario intenta hacer un ajuste manual de inventario y ese ajuste dejaria el stock por debajo de las cantidades ya liberadas por pago y aun no entregadas:
+
+- el sistema bloquea la operacion
+- obliga a resolver la diferencia desde el flujo logistico y no mediante un ajuste manual
+
+## Que significa esto funcionalmente
+
+Una cantidad ya liberada por pago se considera comprometida para la operacion.
+
+Por tanto:
+
+- no debe reaparecer como libre por error
+- no debe desaparecer por ajuste manual sin conciliacion
+
+## Impacto sobre la columna de stock visible en factura
+
+La visibilidad de stock en lineas de factura ya no muestra solo stock fisico bruto.
+
+Ahora muestra un stock mas cercano al realmente vendible porque descuenta:
+
+- cantidades ya comprometidas por pagos anteriores
+- cantidades aun pendientes de entrega dentro del flujo de fulfillment
+
+Esto ayuda al usuario a no prometer o vender dos veces mercancia que ya quedo apartada por otra factura con pago aplicado.
 
 ## Que significa el `release_state` de la factura
 

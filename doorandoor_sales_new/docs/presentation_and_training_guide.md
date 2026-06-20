@@ -65,6 +65,9 @@ El siguiente nivel de trabajo no es crear la base, sino endurecer reglas operati
 - Creacion automatica de orden de fabricacion con pago parcial.
 - Flujo produccion terminada -> picking de salida solo con factura totalmente pagada.
 - Validacion de picking actualiza entrega y estado final.
+- Reutilizacion del picking existente para no duplicar la misma salida entre venta y factura.
+- Bloqueo de ajustes manuales de inventario que dejen el stock por debajo de cantidades ya comprometidas por pago.
+- Columna de stock en factura mostrando stock neto vendible y no solo stock fisico bruto.
 
 ### Continuar desarrollo
 
@@ -129,6 +132,8 @@ Presentar por bloques para que la audiencia entienda mejor el valor funcional.
 - la liberacion puede generar despacho por stock solo cuando la factura esta totalmente pagada
 - la liberacion puede generar orden de fabricacion con pago parcial
 - el sistema mantiene trazabilidad del proceso
+- si ya existe un picking abierto de la venta relacionada, el sistema lo reutiliza para evitar duplicidades
+- los ajustes manuales de inventario no pueden dejar el stock por debajo de lo ya comprometido por pago
 
 ### Beneficio
 
@@ -142,6 +147,7 @@ Presentar por bloques para que la audiencia entienda mejor el valor funcional.
 - smart button de `Dispatches`
 - smart button de `Manufacturing`
 - contraste entre factura parcialmente pagada y factura totalmente pagada
+- caso donde una factura posterior ya no ve como disponible una unidad comprometida por pago anterior
 
 ### Mensaje de cierre del bloque
 
@@ -220,6 +226,7 @@ Tambien conviene explicar que ya quedo separada la regla operativa principal:
 - se agregan bloques de firma en documentos principales
 - la factura puede mostrar referencias de despacho
 - la factura ahora puede mostrar visibilidad de stock y lectura por almacen en sus lineas
+- la visibilidad de stock en factura descuenta cantidades ya comprometidas por pagos anteriores pendientes de entrega
 
 ### Beneficio
 
@@ -229,6 +236,7 @@ Tambien conviene explicar que ya quedo separada la regla operativa principal:
 ### Que mostrar en demo
 
 - lineas de factura con stock total y tags por almacen
+- comparacion entre stock fisico y stock neto visible cuando existen facturas previas con pago aplicado
 - impresion de factura
 - impresion de pedido
 - impresion de entrega
@@ -309,6 +317,8 @@ La orden queda:
 - interpretar el estado de liberacion
 - usar `Sync Fulfillment` cuando haga falta
 - imprimir documentos actualizados
+- entender que el stock visible en factura ya viene descontado por compromisos de pago anteriores
+- no corregir a mano inventario comprometido por pago fuera del flujo logistico
 
 ### Flujo de entrenamiento
 

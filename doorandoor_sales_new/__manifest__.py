@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "DoorAndDoor Sales New",
-    "version": "18.0.1.0.30",
+    "version": "18.0.1.0.31",
     "category": "Sales",
     "summary": "Invoice-driven sales, payment release, delivery and production orchestration",
     "description": """
@@ -79,6 +79,9 @@ Historial resumido
 
 - 18.0.1.0.12 a 18.0.1.0.14
   Se agregan bloques de firma en reportes, referencia visible a ordenes de despacho en factura y el cierre del ciclo factura -> fabricacion -> entrega.
+
+- 18.0.1.0.31
+  Se evita la duplicacion de pickings y movimientos de stock cuando la factura intenta liberar una salida ya existente de la venta relacionada.
 
 Autor
 -----

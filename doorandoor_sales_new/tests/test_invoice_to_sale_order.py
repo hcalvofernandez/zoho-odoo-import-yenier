@@ -1,4 +1,5 @@
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -17,6 +18,14 @@ class TestInvoiceToSaleOrder(TransactionCase):
                 "name": "Producto Prueba DDSN",
                 "type": "consu",
                 "list_price": 120.0,
+            }
+        )
+        cls.stock_product = cls.env["product.product"].create(
+            {
+                "name": "Producto Stock DDSN",
+                "type": "consu",
+                "is_storable": True,
+                "list_price": 150.0,
             }
         )
         cls.component_product = cls.env["product.product"].create(
@@ -97,6 +106,28 @@ class TestInvoiceToSaleOrder(TransactionCase):
         )
         return move
 
+    def _create_stock_invoice(self):
+        move = self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner.id,
+                "invoice_date": fields.Date.today(),
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.stock_product.id,
+                            "name": self.stock_product.display_name,
+                            "quantity": 2.0,
+                            "price_unit": 150.0,
+                        },
+                    )
+                ],
+            }
+        )
+        return move
+
     def test_invoice_post_creates_sale_order_and_fulfillment(self):
         move = self._create_customer_invoice()
 
@@ -134,6 +165,29 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertIn(warehouse.code or warehouse.name, invoice_line.ddsn_warehouse_stock_display)
         self.assertIn(warehouse.code or warehouse.name, invoice_line.ddsn_warehouse_stock_text)
 
+    def test_invoice_line_shows_net_stock_after_previous_paid_commitment(self):
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)],
+            limit=1,
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            self.stock_product,
+            warehouse.lot_stock_id,
+            6.0,
+        )
+
+        previous_move = self._create_stock_invoice()
+        previous_move.payment_release_policy = "prorated"
+        previous_move.action_post()
+        previous_move._ddsn_apply_release_for_amount(previous_move.amount_total / 2)
+
+        new_move = self._create_stock_invoice()
+        invoice_line = new_move.invoice_line_ids.filtered(lambda line: line.product_id == self.stock_product)
+
+        self.assertEqual(invoice_line.ddsn_available_qty, 5.0)
+        self.assertIn("5.00", invoice_line.ddsn_stock_display)
+        self.assertIn("5.00", invoice_line.ddsn_warehouse_stock_display)
+
     def test_posting_same_invoice_does_not_duplicate_fulfillment_lines(self):
         move = self._create_customer_invoice()
 
@@ -169,6 +223,57 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertEqual(fulfillment_line.state, "in_process")
         self.assertEqual(move.picking_count, 1)
 
+    def test_release_reuses_existing_sale_picking_without_duplicate_moves(self):
+        move = self._create_customer_invoice()
+        move.action_post()
+
+        sale_order = move.sale_order_id
+        sale_order.action_confirm()
+        warehouse = sale_order.warehouse_id or self.env["stock.warehouse"].search(
+            [("company_id", "=", move.company_id.id)],
+            limit=1,
+        )
+        picking_type = warehouse.out_type_id
+        customer_location = move.partner_id.property_stock_customer or self.env.ref(
+            "stock.stock_location_customers"
+        )
+        existing_picking = self.env["stock.picking"].create(
+            {
+                "partner_id": move.partner_id.id,
+                "picking_type_id": picking_type.id,
+                "location_id": picking_type.default_location_src_id.id,
+                "location_dest_id": customer_location.id,
+                "origin": sale_order.name,
+                "company_id": move.company_id.id,
+                "move_type": "direct",
+            }
+        )
+        existing_move = self.env["stock.move"].create(
+            {
+                "name": self.product.display_name,
+                "picking_id": existing_picking.id,
+                "company_id": move.company_id.id,
+                "product_id": self.product.id,
+                "product_uom_qty": 1.0,
+                "product_uom": self.product.uom_id.id,
+                "location_id": existing_picking.location_id.id,
+                "location_dest_id": existing_picking.location_dest_id.id,
+                "sale_line_id": sale_order.order_line.id,
+                "origin": sale_order.name,
+            }
+        )
+
+        move._ddsn_apply_release_for_amount(move.amount_total)
+
+        fulfillment_line = move.fulfillment_line_ids
+        self.assertEqual(fulfillment_line.picking_id, existing_picking)
+        self.assertEqual(
+            len(existing_picking.move_ids.filtered(lambda stock_move: stock_move.sale_line_id == sale_order.order_line)),
+            1,
+            "La factura debe reutilizar el movimiento existente del pedido y no crear otro duplicado.",
+        )
+        self.assertEqual(existing_move.product_uom_qty, 3.0)
+
     def test_partial_payment_does_not_create_stock_picking(self):
         move = self._create_customer_invoice()
         move.action_post()
@@ -179,6 +284,56 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertFalse(fulfillment_line.picking_id, "No debe crearse picking con pago parcial.")
         self.assertEqual(fulfillment_line.qty_sent_stock, 0.0)
         self.assertEqual(fulfillment_line.state, "ready_stock")
+
+    def test_manual_inventory_adjustment_cannot_reduce_below_released_qty(self):
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)],
+            limit=1,
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            self.stock_product,
+            warehouse.lot_stock_id,
+            6.0,
+        )
+        move = self._create_stock_invoice()
+        move.payment_release_policy = "prorated"
+        move.action_post()
+        move._ddsn_apply_release_for_amount(move.amount_total / 2)
+
+        quant = self.env["stock.quant"]._gather(
+            self.stock_product,
+            warehouse.lot_stock_id,
+            strict=True,
+        )[:1].with_context(inventory_mode=True)
+        quant.inventory_quantity = 0.0
+
+        with self.assertRaises(UserError):
+            quant.action_apply_inventory()
+
+    def test_manual_inventory_adjustment_can_keep_released_qty_protected(self):
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)],
+            limit=1,
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            self.stock_product,
+            warehouse.lot_stock_id,
+            6.0,
+        )
+        move = self._create_stock_invoice()
+        move.payment_release_policy = "prorated"
+        move.action_post()
+        move._ddsn_apply_release_for_amount(move.amount_total / 2)
+
+        quant = self.env["stock.quant"]._gather(
+            self.stock_product,
+            warehouse.lot_stock_id,
+            strict=True,
+        )[:1].with_context(inventory_mode=True)
+        quant.inventory_quantity = 1.0
+        quant.action_apply_inventory()
+
+        self.assertEqual(quant.quantity, 1.0)
 
     def test_release_creates_mrp_production(self):
         move = self._create_manufacturing_invoice()

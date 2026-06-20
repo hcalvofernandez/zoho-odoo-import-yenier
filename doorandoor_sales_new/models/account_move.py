@@ -621,6 +621,10 @@ class AccountMove(models.Model):
                 if same_log_picking:
                     return same_log_picking[0]
 
+        existing_sale_picking = self._ddsn_find_reusable_sale_picking()
+        if existing_sale_picking:
+            return existing_sale_picking
+
         picking_type = self._ddsn_get_outgoing_picking_type()
         location_dest = self.partner_shipping_id.property_stock_customer
         if not location_dest:
@@ -636,6 +640,38 @@ class AccountMove(models.Model):
                 "move_type": "direct",
             }
         )
+
+    def _ddsn_find_reusable_sale_picking(self):
+        self.ensure_one()
+        sale_order = self.sale_order_id
+        if not sale_order:
+            return False
+
+        picking_domain = [
+            ("picking_type_id.code", "=", "outgoing"),
+            ("state", "not in", ("done", "cancel")),
+            ("company_id", "=", self.company_id.id),
+        ]
+
+        if "sale_id" in self.env["stock.picking"]._fields:
+            picking_domain.append(("sale_id", "=", sale_order.id))
+        else:
+            picking_domain.append(("origin", "=", sale_order.name))
+
+        candidate_pickings = self.env["stock.picking"].search(picking_domain, order="create_date desc, id desc")
+        if not candidate_pickings:
+            return False
+
+        sale_line_ids = set(sale_order.order_line.ids)
+        if not sale_line_ids:
+            return candidate_pickings[0]
+
+        for picking in candidate_pickings:
+            move_sale_line_ids = set(picking.move_ids.sale_line_id.ids)
+            if not move_sale_line_ids or move_sale_line_ids.intersection(sale_line_ids):
+                return picking
+
+        return candidate_pickings[0]
 
     def _ddsn_get_picking_origin_label(self):
         self.ensure_one()
@@ -670,6 +706,22 @@ class AccountMove(models.Model):
 
     def _ddsn_create_stock_move_from_fulfillment_line(self, picking, line, qty_to_send):
         self.ensure_one()
+        sale_line = line.sale_line_id
+        existing_move = self.env["stock.move"]
+        if sale_line:
+            existing_move = self.env["stock.move"].search(
+                [
+                    ("picking_id", "=", picking.id),
+                    ("sale_line_id", "=", sale_line.id),
+                    ("product_id", "=", line.product_id.id),
+                    ("state", "!=", "cancel"),
+                ],
+                limit=1,
+            )
+        if existing_move:
+            existing_move.write({"product_uom_qty": existing_move.product_uom_qty + qty_to_send})
+            return existing_move
+
         self.env["stock.move"].create(
             {
                 "name": line.product_id.display_name,
