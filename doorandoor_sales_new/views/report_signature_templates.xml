@@ -57,8 +57,29 @@
         </template>
 
         <template id="report_invoice_document_signature" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@t-set='layout_document_title']/span[@t-elif=&quot;o.move_type == 'out_invoice' and o.state == 'draft'&quot;]" position="replace">
+                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Prefactura</span>
+            </xpath>
             <xpath expr="//div[hasclass('page')]" position="inside">
                 <div class="mt-5 pt-4">
+                    <div class="row mb-4 align-items-start">
+                        <div class="col-8">
+                            <div>
+                                <strong>Codigo de documento</strong>
+                            </div>
+                            <div class="mt-2">
+                                <img t-att-src="o._ddsn_get_barcode_img_src()" alt="Invoice Barcode" style="max-width: 320px; max-height: 90px;"/>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div>
+                                <strong>Escanear para abrir</strong>
+                            </div>
+                            <div class="mt-2">
+                                <img t-att-src="o._ddsn_get_document_qr_img_src()" alt="Invoice QR" style="width: 110px; height: 110px;"/>
+                            </div>
+                        </div>
+                    </div>
                     <t t-set="invoice_pickings" t-value="o.fulfillment_line_ids.mapped('picking_id')"/>
                     <t t-if="invoice_pickings">
                         <div class="mb-3">
@@ -116,6 +137,24 @@
         <template id="report_delivery_document_signature" inherit_id="stock.report_delivery_document">
             <xpath expr="//div[hasclass('page')]" position="inside">
                 <div class="mt-5 pt-4">
+                    <div class="row mb-4 align-items-start">
+                        <div class="col-8">
+                            <div>
+                                <strong>Codigo de documento</strong>
+                            </div>
+                            <div class="mt-2">
+                                <img t-att-src="o._ddsn_get_barcode_img_src()" alt="Picking Barcode" style="max-width: 320px; max-height: 90px;"/>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div>
+                                <strong>Escanear para abrir</strong>
+                            </div>
+                            <div class="mt-2">
+                                <img t-att-src="o._ddsn_get_document_qr_img_src()" alt="Picking QR" style="width: 110px; height: 110px;"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-6">
                             <div style="margin-top: 30px;">

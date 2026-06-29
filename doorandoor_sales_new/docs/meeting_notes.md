@@ -96,3 +96,44 @@ Fecha -- 14 de junio 2026
 - Acciones:
   - mantener este criterio como regla base mientras no exista una politica mas avanzada de conciliacion manual
   - conservar la validacion cubierta por pruebas en entorno Docker Odoo
+
+## Ajuste tecnico interno 21-06-26 - Documentos escaneables
+
+- Tema:
+  Incorporacion de codigos de barra en reportes impresos y simplificacion de documentos operativos de entrega.
+
+- Problemas detectados:
+  - los documentos impresos no tenian una referencia escaneable comun para uso con hangers
+  - la orden de recogida seguia mostrando importes aunque el uso real en almacen requiere solo items y cantidades
+
+- Soluciones aplicadas:
+  - se agrego una logica comun para generar barcode `Code128` y QR por documento
+  - se incorporaron esos codigos en factura, picking y orden de recogida
+  - el QR apunta a la URL del formulario del documento en Odoo
+  - la orden de recogida impresa se simplifico para mostrar solo producto, cantidad y notas
+  - la carga del modulo actualizada fue validada en entorno Docker Odoo
+
+- Acciones:
+  - revisar con los usuarios el tamano y ubicacion final del barcode en PDF
+  - confirmar en siguiente ciclo de reuniones si se extiende el mismo criterio a otros reportes
+
+## Ajuste tecnico interno 24-06-26 - Reserva temporal de prefactura
+
+- Tema:
+  Reserva temporal de inventario para cotizaciones o prefacturas con vencimiento automatico.
+
+- Problemas detectados:
+  - al preparar una prefactura o cotizacion, el equipo comercial podia tomar una existencia como disponible aunque otro usuario ya la estuviera negociando
+  - esa falta de retencion temporal podia provocar doble venta o lectura comercial desactualizada del stock
+
+- Soluciones aplicadas:
+  - se definio la prefactura como una `account.move` de cliente en estado borrador
+  - el reporte impreso de ese documento ahora muestra el titulo `Prefactura`
+  - se agrego una reserva temporal de 24 horas sobre esa prefactura
+  - mientras la reserva siga activa, su cantidad se descuenta del stock visible en cotizaciones y facturas
+  - si la prefactura se publica, la reserva temporal deja de contar y el proceso sigue por el flujo normal
+  - si pasan 24 horas sin publicacion, una tarea automatica libera la reserva
+
+- Acciones:
+  - validar en entorno Docker Odoo el comportamiento visual de la reserva en casos concurrentes
+  - confirmar con operaciones si el tiempo de 24 horas se mantiene como politica fija o parametrica por area

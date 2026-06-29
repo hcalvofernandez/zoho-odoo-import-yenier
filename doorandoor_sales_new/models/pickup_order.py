@@ -5,7 +5,7 @@ class DoorandoorPickupOrder(models.Model):
     _name = "doorandoor.pickup.order"
     _description = "DoorAndDoor Pickup Order"
     _order = "create_date desc, id desc"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "doorandoor.document.barcode.mixin"]
 
     name = fields.Char(
         string="Pickup Order",

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
@@ -187,6 +189,62 @@ class TestInvoiceToSaleOrder(TransactionCase):
         self.assertEqual(invoice_line.ddsn_available_qty, 5.0)
         self.assertIn("5.00", invoice_line.ddsn_stock_display)
         self.assertIn("5.00", invoice_line.ddsn_warehouse_stock_display)
+
+    def test_invoice_line_shows_net_stock_after_active_quote_reservation(self):
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)],
+            limit=1,
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            self.stock_product,
+            warehouse.lot_stock_id,
+            6.0,
+        )
+        reserved_move = self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner.id,
+                "invoice_date": fields.Date.today(),
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.stock_product.id,
+                            "name": self.stock_product.display_name,
+                            "quantity": 2.0,
+                            "price_unit": 150.0,
+                        },
+                    )
+                ],
+            }
+        )
+        self.assertTrue(reserved_move.ddsn_reservation_active)
+
+        new_move = self._create_stock_invoice()
+        invoice_line = new_move.invoice_line_ids.filtered(lambda line: line.product_id == self.stock_product)
+
+        self.assertEqual(invoice_line.ddsn_available_qty, 4.0)
+        self.assertIn("4.00", invoice_line.ddsn_stock_display)
+
+    def test_preinvoice_reservation_is_released_when_posting_invoice(self):
+        move = self._create_stock_invoice()
+
+        self.assertTrue(move.ddsn_reservation_active)
+        move.action_post()
+
+        self.assertFalse(move.ddsn_reservation_expires_at)
+        self.assertFalse(move.ddsn_reservation_active)
+
+    def test_expired_preinvoice_reservation_is_released(self):
+        move = self._create_stock_invoice()
+        move.write({"ddsn_reservation_expires_at": fields.Datetime.now() - timedelta(hours=1)})
+
+        released_count = self.env["account.move"]._ddsn_release_expired_preinvoice_reservations()
+
+        self.assertEqual(released_count, 1)
+        self.assertFalse(move.ddsn_reservation_expires_at)
+        self.assertFalse(move.ddsn_reservation_active)
 
     def test_posting_same_invoice_does_not_duplicate_fulfillment_lines(self):
         move = self._create_customer_invoice()

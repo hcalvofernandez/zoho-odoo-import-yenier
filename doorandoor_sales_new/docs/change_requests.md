@@ -153,3 +153,43 @@
 
 - Nota de contexto:
   Durante la validacion aparecieron productos migrados desde Zoho con tipo consumible o servicio. Ese comportamiento se reconoce como condicion heredada de datos migrados y ya fue considerado en la preparacion de la base de produccion.
+
+## CR-0008
+
+- Fecha:
+  2026-06-21
+
+- Solicitado por:
+  Cliente DoorAndDoor
+
+- Descripcion:
+  Incorporar codigos de barra escaneables en reportes impresos clave y retirar montos de los documentos operativos de entrega para uso de almacen.
+
+- Impacto funcional:
+  Facturas, pickings y ordenes de recogida pueden identificarse por escaneo y los documentos de entrega quedan enfocados en items y cantidades.
+
+- Impacto tecnico:
+  Requiere agregar una logica comun de barcode y QR para modelos documentales, extender templates QWeb de reportes y simplificar el reporte de orden de recogida quitando importes y total.
+
+- Estado:
+  Implementado y validado en carga de modulo Docker Odoo
+
+## CR-0009
+
+- Fecha:
+  2026-06-24
+
+- Solicitado por:
+  Cliente DoorAndDoor
+
+- Descripcion:
+  Reservar inventario temporalmente al crear una prefactura, manteniendo la reserva durante 24 horas y liberandola automaticamente si no se convierte en factura publicada.
+
+- Impacto funcional:
+  El equipo comercial puede emitir una prefactura imprimible que sostenga una reserva temporal visible para no vender dos veces la misma existencia mientras la prefactura sigue vigente.
+
+- Impacto tecnico:
+  Requiere extender `account.move` en estado borrador, etiquetar el PDF como `Prefactura`, agregar vencimiento de reserva, tarea automatica de liberacion y descuento de esa reserva temporal en las columnas de stock visibles.
+
+- Estado:
+  Implementado y validado en entorno Docker Odoo

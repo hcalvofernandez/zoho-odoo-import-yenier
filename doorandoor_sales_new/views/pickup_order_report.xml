@@ -19,30 +19,42 @@
                                     <strong>Estado:</strong> <span t-field="o.state"/>
                                 </div>
                             </div>
+                            <div class="row mb-4 align-items-start">
+                                <div class="col-8">
+                                    <div>
+                                        <strong>Codigo de documento</strong>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img t-att-src="o._ddsn_get_barcode_img_src()" alt="Pickup Barcode" style="max-width: 320px; max-height: 90px;"/>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <div>
+                                        <strong>Escanear para abrir</strong>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img t-att-src="o._ddsn_get_document_qr_img_src()" alt="Pickup QR" style="width: 110px; height: 110px;"/>
+                                    </div>
+                                </div>
+                            </div>
                             <table class="table table-sm table-borderless o_main_table">
                                 <thead>
                                     <tr>
                                         <th>Producto</th>
                                         <th class="text-end">Cantidad autorizada</th>
-                                        <th class="text-end">Importe</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="o.pickup_line_ids" t-as="line">
                                         <td><span t-field="line.product_id"/></td>
                                         <td class="text-end"><span t-field="line.product_uom_qty"/></td>
-                                        <td class="text-end"><span t-field="line.amount_total"/></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="row mt-4">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <strong>Notas:</strong>
                                     <div t-field="o.note"/>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <strong>Total:</strong>
-                                    <span t-field="o.amount_total"/>
                                 </div>
                             </div>
                             <div class="row mt-5 pt-4">

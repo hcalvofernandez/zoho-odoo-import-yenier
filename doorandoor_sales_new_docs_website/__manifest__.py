@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "DoorAndDoor Sales New Docs Website",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.3",
     "category": "Website",
     "summary": "Publish DoorAndDoor Sales New Markdown docs on the website",
     "description": """
@@ -15,6 +15,10 @@ Objetivo:
 - mantener la documentacion en el mismo repositorio
 - editarla desde el IDE habitual del proyecto
 - mostrarla en el website sin duplicar contenido
+
+Incluye las guias informativas usadas para capacitacion de usuarios
+despues de cada mejora operativa importante del modulo principal,
+incluyendo reglas de reserva temporal, stock visible y documentos operativos.
     """,
     "author": "Hanoi Calvo Fernández (doorandoor)",
     "website": "https://doorandoor.com",

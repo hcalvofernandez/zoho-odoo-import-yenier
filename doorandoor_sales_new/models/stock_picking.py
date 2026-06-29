@@ -2,7 +2,8 @@ from odoo import models
 
 
 class StockPicking(models.Model):
-    _inherit = "stock.picking"
+    _name = "stock.picking"
+    _inherit = ["stock.picking", "doorandoor.document.barcode.mixin"]
 
     def button_validate(self):
         pending_pickings = self.filtered(lambda picking: picking.state not in ("done", "cancel"))

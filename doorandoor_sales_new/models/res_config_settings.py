@@ -64,3 +64,9 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="doorandoor_sales_new.mrp_creation_policy",
         default="per_line",
     )
+
+    ddsn_preinvoice_reservation_hours = fields.Integer(
+        string="Preinvoice Reservation Hours",
+        config_parameter="doorandoor_sales_new.preinvoice_reservation_hours",
+        default=24,
+    )

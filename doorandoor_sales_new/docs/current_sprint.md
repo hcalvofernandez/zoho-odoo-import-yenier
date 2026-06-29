@@ -95,6 +95,11 @@ Este sprint se considera listo cuando:
 - La validacion se apoya en las lineas de cumplimiento del modulo para calcular cantidad liberada pendiente de entrega.
 - El comportamiento fue validado con pruebas automatizadas ejecutadas en el entorno Docker Odoo.
 - La columna de stock visible en lineas de factura ahora muestra stock neto vendible, descontando cantidades ya comprometidas por pagos anteriores pendientes de entrega.
+- Los reportes de factura, picking y orden de recogida ahora muestran codigo de barras y QR para identificacion y apertura del documento.
+- La orden de recogida impresa queda enfocada solo en producto, cantidad y notas operativas, sin montos ni total.
+- Las prefacturas en borrador ahora sostienen una reserva temporal de inventario por 24 horas.
+- Esa reserva temporal se descuenta del stock visible en cotizacion y factura mientras siga activa.
+- Si la prefactura no se publica como factura dentro del plazo, la reserva se libera automaticamente.
 
 ## Contexto de migracion conocido
 
@@ -111,6 +116,8 @@ Hasta este punto se considera cerrado y documentado:
 - la base de recogida operativa en almacen
 - la proteccion contra duplicacion de salida entre venta y factura
 - el bloqueo de ajustes manuales que dejen stock por debajo de cantidades ya comprometidas por pago
+- la identificacion escaneable de documentos operativos y comerciales desde reportes impresos
+- la reserva temporal de inventario por 24 horas para prefacturas en borrador
 
 Queda expresamente fuera de avance adicional hasta nueva definicion del cliente:
 

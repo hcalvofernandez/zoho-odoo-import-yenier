@@ -67,6 +67,49 @@ class TestSaleOrderCommercialFeatures(TransactionCase):
         self.assertIn(self.warehouse.code or self.warehouse.name, line.ddsn_warehouse_stock_display)
         self.assertIn(self.warehouse.code or self.warehouse.name, line.ddsn_warehouse_stock_html)
 
+    def test_sale_order_line_shows_net_stock_after_active_preinvoice_reservation(self):
+        self.env["stock.quant"]._update_available_quantity(
+            self.product,
+            self.warehouse.lot_stock_id,
+            8.0,
+        )
+        self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner.id,
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product.id,
+                            "name": self.product.display_name,
+                            "quantity": 3.0,
+                            "price_unit": 50.0,
+                        },
+                    )
+                ],
+            }
+        )
+        visible_order = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "warehouse_id": self.warehouse.id,
+            }
+        )
+        visible_line = self.env["sale.order.line"].create(
+            {
+                "order_id": visible_order.id,
+                "product_id": self.product.id,
+                "name": self.product.display_name,
+                "product_uom_qty": 1.0,
+                "price_unit": 50.0,
+            }
+        )
+
+        self.assertEqual(visible_line.ddsn_available_qty, 5.0)
+        self.assertIn("5.00", visible_line.ddsn_stock_display)
+
     def test_partner_bonus_is_applied_when_line_has_no_discount(self):
         sale_order = self.env["sale.order"].create(
             {

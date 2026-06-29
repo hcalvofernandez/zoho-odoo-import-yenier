@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "DoorAndDoor Sales New",
-    "version": "18.0.1.0.31",
+    "version": "18.0.1.0.34",
     "category": "Sales",
     "summary": "Invoice-driven sales, payment release, delivery and production orchestration",
     "description": """
@@ -83,6 +83,15 @@ Historial resumido
 - 18.0.1.0.31
   Se evita la duplicacion de pickings y movimientos de stock cuando la factura intenta liberar una salida ya existente de la venta relacionada.
 
+- 18.0.1.0.32
+  Se agregan codigos de barra y QR en factura, picking y orden de recogida, y se eliminan importes del reporte operativo de entrega.
+
+- 18.0.1.0.33
+  Se agrega una reserva temporal de inventario por 24 horas para cotizaciones/prefacturas, con liberacion automatica al vencer o al convertirse en factura.
+
+- 18.0.1.0.34
+  La reserva temporal se traslada al documento de prefactura basado en `account.move` borrador, y el reporte impreso muestra el titulo `Prefactura`.
+
 Autor
 -----
 
@@ -100,6 +109,7 @@ Hanoi Calvo Fernández (doorandoor)
     ],
     "data": [
         "data/pickup_order_sequence.xml",
+        "data/quote_reservation_cron.xml",
         "security/ir.model.access.csv",
         "views/fulfillment_line_views.xml",
         "views/payment_release_log_views.xml",

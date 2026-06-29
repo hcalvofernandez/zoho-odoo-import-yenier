@@ -78,7 +78,7 @@ class SaleOrderLine(models.Model):
             if warehouse and warehouse.lot_stock_id:
                 product_ctx = product_ctx.with_context(location=warehouse.lot_stock_id.id)
 
-            available_qty = product_ctx.qty_available
+            available_qty = product_ctx.qty_available - line._ddsn_get_reserved_qty_for_display(warehouse=warehouse)
             uom_name = product.uom_id.display_name or product.uom_id.name
 
             line.ddsn_available_qty = available_qty
@@ -120,7 +120,10 @@ class SaleOrderLine(models.Model):
             if not location:
                 continue
 
-            qty = product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+            qty = (
+                product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+                - self._ddsn_get_reserved_qty_for_display(warehouse=warehouse)
+            )
             if qty > 0:
                 background = "#d1fae5"
                 color = "#065f46"
@@ -162,7 +165,10 @@ class SaleOrderLine(models.Model):
             if not location:
                 continue
 
-            qty = product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+            qty = (
+                product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+                - self._ddsn_get_reserved_qty_for_display(warehouse=warehouse)
+            )
             warehouse_label = warehouse.code or warehouse.name
             chunks.append(f"{warehouse_label}: {qty:.2f}")
 
@@ -187,11 +193,42 @@ class SaleOrderLine(models.Model):
             if not location:
                 continue
 
-            qty = product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+            qty = (
+                product.with_company(self.order_id.company_id).with_context(location=location.id).qty_available
+                - self._ddsn_get_reserved_qty_for_display(warehouse=warehouse)
+            )
             warehouse_label = warehouse.code or warehouse.name
             lines.append(f"{warehouse_label}: {qty:.2f}")
 
         return "\n".join(lines) or False
+
+    def _ddsn_get_reserved_qty_for_display(self, warehouse=False):
+        self.ensure_one()
+        product = self.product_id
+        order = self.order_id
+        if not product or not order:
+            return 0.0
+
+        reserved_moves = self.env["account.move"].search(
+            [
+                ("move_type", "=", "out_invoice"),
+                ("state", "=", "draft"),
+                ("company_id", "=", order.company_id.id),
+            ]
+        )
+        reserved_qty = 0.0
+        for reserved_move in reserved_moves:
+            if not reserved_move._ddsn_has_active_reservation():
+                continue
+            reservation_warehouse = reserved_move.sale_order_id.warehouse_id
+            if warehouse and reservation_warehouse and reservation_warehouse != warehouse:
+                continue
+            reserved_qty += sum(
+                reserved_move.invoice_line_ids.filtered(
+                    lambda line: line.product_id == product and line.display_type in (False, "product")
+                ).mapped("quantity")
+            )
+        return reserved_qty
 
     @api.onchange("product_id")
     def _onchange_ddsn_apply_partner_bonus(self):

@@ -102,6 +102,8 @@
                                 <field name="partial_stock_policy"/>
                                 <field name="picking_creation_policy"/>
                                 <field name="mrp_creation_policy"/>
+                                <field name="ddsn_reservation_expires_at" readonly="1"/>
+                                <field name="ddsn_reservation_status" readonly="1"/>
                             </group>
                         </group>
                     </page>

@@ -24,6 +24,9 @@
                             <setting string="Manufacturing Creation Policy">
                                 <field name="ddsn_mrp_creation_policy"/>
                             </setting>
+                            <setting string="Preinvoice Reservation Hours">
+                                <field name="ddsn_preinvoice_reservation_hours"/>
+                            </setting>
                         </block>
                     </app>
                 </xpath>

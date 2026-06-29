@@ -77,7 +77,11 @@ class AccountMoveLine(models.Model):
             if warehouse and warehouse.lot_stock_id:
                 product_ctx = product_ctx.with_context(location=warehouse.lot_stock_id.id)
 
-            available_qty = product_ctx.qty_available - line._ddsn_get_committed_qty_for_display(warehouse=warehouse)
+            available_qty = (
+                product_ctx.qty_available
+                - line._ddsn_get_committed_qty_for_display(warehouse=warehouse)
+                - line._ddsn_get_quote_reserved_qty_for_display(warehouse=warehouse)
+            )
             uom_name = product.uom_id.display_name or product.uom_id.name
 
             line.ddsn_available_qty = available_qty
@@ -122,6 +126,35 @@ class AccountMoveLine(models.Model):
             committed_qty += pending_qty
         return committed_qty
 
+    def _ddsn_get_quote_reserved_qty_for_display(self, warehouse=False):
+        self.ensure_one()
+        product = self.product_id
+        move = self.move_id
+        if not product or not move:
+            return 0.0
+
+        reserved_moves = self.env["account.move"].search(
+            [
+                ("move_type", "=", "out_invoice"),
+                ("state", "=", "draft"),
+                ("company_id", "=", move.company_id.id),
+                ("id", "!=", move.id or 0),
+            ]
+        )
+        reserved_qty = 0.0
+        for reserved_move in reserved_moves:
+            if not reserved_move._ddsn_has_active_reservation():
+                continue
+            reservation_warehouse = reserved_move.sale_order_id.warehouse_id
+            if warehouse and reservation_warehouse and reservation_warehouse != warehouse:
+                continue
+            reserved_qty += sum(
+                reserved_move.invoice_line_ids.filtered(
+                    lambda line: line.product_id == product and line.display_type in (False, "product")
+                ).mapped("quantity")
+            )
+        return reserved_qty
+
     def _ddsn_get_warehouse_stock_display(self):
         self.ensure_one()
         product = self.product_id
@@ -141,6 +174,7 @@ class AccountMoveLine(models.Model):
             qty = (
                 product.with_company(self.move_id.company_id).with_context(location=location.id).qty_available
                 - self._ddsn_get_committed_qty_for_display(warehouse=warehouse)
+                - self._ddsn_get_quote_reserved_qty_for_display(warehouse=warehouse)
             )
             warehouse_label = warehouse.code or warehouse.name
             chunks.append(f"{warehouse_label}: {qty:.2f}")
@@ -179,6 +213,7 @@ class AccountMoveLine(models.Model):
             qty = (
                 product.with_company(self.move_id.company_id).with_context(location=location.id).qty_available
                 - self._ddsn_get_committed_qty_for_display(warehouse=warehouse)
+                - self._ddsn_get_quote_reserved_qty_for_display(warehouse=warehouse)
             )
             if qty > 0:
                 background = "#d1fae5"
@@ -220,6 +255,7 @@ class AccountMoveLine(models.Model):
             qty = (
                 product.with_company(self.move_id.company_id).with_context(location=location.id).qty_available
                 - self._ddsn_get_committed_qty_for_display(warehouse=warehouse)
+                - self._ddsn_get_quote_reserved_qty_for_display(warehouse=warehouse)
             )
             warehouse_label = warehouse.code or warehouse.name
             lines.append(f"{warehouse_label}: {qty:.2f}")

@@ -68,6 +68,7 @@ El siguiente nivel de trabajo no es crear la base, sino endurecer reglas operati
 - Reutilizacion del picking existente para no duplicar la misma salida entre venta y factura.
 - Bloqueo de ajustes manuales de inventario que dejen el stock por debajo de cantidades ya comprometidas por pago.
 - Columna de stock en factura mostrando stock neto vendible y no solo stock fisico bruto.
+- Reserva temporal de inventario por 24 horas en prefacturas en borrador, con liberacion automatica si no se publican como factura.
 
 ### Continuar desarrollo
 
@@ -170,6 +171,8 @@ Tambien conviene explicar que ya quedo separada la regla operativa principal:
 
 - muestra disponibilidad del producto en la cotizacion
 - muestra lectura por almacen
+- descuenta reservas temporales activas de prefacturas vigentes
+- sostiene una reserva comercial de 24 horas para evitar doble venta mientras se define la publicacion de la factura
 
 #### Beneficio
 
@@ -227,6 +230,7 @@ Tambien conviene explicar que ya quedo separada la regla operativa principal:
 - la factura puede mostrar referencias de despacho
 - la factura ahora puede mostrar visibilidad de stock y lectura por almacen en sus lineas
 - la visibilidad de stock en factura descuenta cantidades ya comprometidas por pagos anteriores pendientes de entrega
+- la visibilidad de stock en factura tambien descuenta reservas temporales activas provenientes de prefacturas vigentes
 
 ### Beneficio
 

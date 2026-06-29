@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
+    _name = "account.move"
+    _inherit = ["account.move", "doorandoor.document.barcode.mixin"]
 
     release_state = fields.Selection(
         selection=[
@@ -66,6 +69,24 @@ class AccountMove(models.Model):
     pickup_order_count = fields.Integer(
         string="Pickup Order Count",
         compute="_compute_fulfillment_counts",
+    )
+    ddsn_reservation_expires_at = fields.Datetime(
+        string="Preinvoice Reservation Expires At",
+        copy=False,
+        readonly=True,
+    )
+    ddsn_reservation_active = fields.Boolean(
+        string="Preinvoice Reservation Active",
+        compute="_compute_ddsn_reservation_status",
+    )
+    ddsn_reservation_status = fields.Selection(
+        selection=[
+            ("active", "Active"),
+            ("expired", "Expired"),
+            ("released", "Released"),
+        ],
+        string="Preinvoice Reservation Status",
+        compute="_compute_ddsn_reservation_status",
     )
 
     payment_release_policy = fields.Selection(
@@ -154,6 +175,37 @@ class AccountMove(models.Model):
             move.payment_release_log_count = len(move.payment_release_log_ids)
             move.pickup_order_count = len(move.pickup_order_ids)
 
+    @api.depends("state", "move_type", "ddsn_reservation_expires_at")
+    def _compute_ddsn_reservation_status(self):
+        now = fields.Datetime.now()
+        for move in self:
+            if move.state == "posted" or move.state == "cancel" or move.move_type != "out_invoice":
+                move.ddsn_reservation_active = False
+                move.ddsn_reservation_status = "released"
+            elif move.state == "draft" and move.ddsn_reservation_expires_at and move.ddsn_reservation_expires_at > now:
+                move.ddsn_reservation_active = True
+                move.ddsn_reservation_status = "active"
+            elif move.state == "draft" and move.ddsn_reservation_expires_at:
+                move.ddsn_reservation_active = False
+                move.ddsn_reservation_status = "expired"
+            else:
+                move.ddsn_reservation_active = False
+                move.ddsn_reservation_status = "released"
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        expiration_hours = self._ddsn_get_reservation_window_hours()
+        now = fields.Datetime.now()
+        for vals in vals_list:
+            if vals.get("move_type") == "out_invoice" and not vals.get("ddsn_reservation_expires_at"):
+                vals["ddsn_reservation_expires_at"] = now + timedelta(hours=expiration_hours)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if vals.get("state") in ("posted", "cancel"):
+            vals.setdefault("ddsn_reservation_expires_at", False)
+        return super().write(vals)
+
     def action_view_generated_sale_order(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
@@ -223,9 +275,39 @@ class AccountMove(models.Model):
         return True
 
     def action_post(self):
+        self.filtered("ddsn_reservation_expires_at").write({"ddsn_reservation_expires_at": False})
         moves = super().action_post()
         self._ddsn_create_sale_orders_and_fulfillment()
         return moves
+
+    def _ddsn_get_reservation_window_hours(self):
+        param_value = self.env["ir.config_parameter"].sudo().get_param(
+            "doorandoor_sales_new.preinvoice_reservation_hours",
+            "24",
+        )
+        try:
+            return max(int(param_value), 1)
+        except (TypeError, ValueError):
+            return 24
+
+    def _ddsn_has_active_reservation(self):
+        self.ensure_one()
+        self._compute_ddsn_reservation_status()
+        return self.ddsn_reservation_active
+
+    @api.model
+    def _ddsn_release_expired_preinvoice_reservations(self):
+        now = fields.Datetime.now()
+        expired_moves = self.search(
+            [
+                ("move_type", "=", "out_invoice"),
+                ("state", "=", "draft"),
+                ("ddsn_reservation_expires_at", "!=", False),
+                ("ddsn_reservation_expires_at", "<=", now),
+            ]
+        )
+        expired_moves.write({"ddsn_reservation_expires_at": False})
+        return len(expired_moves)
 
     def _ddsn_create_sale_orders_and_fulfillment(self):
         for move in self:
